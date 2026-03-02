@@ -21,6 +21,11 @@ from claude_agent_sdk.types import (
 )
 from dotenv import load_dotenv
 
+from app.core.memory import (
+    MEMORY_MCP_SERVER_KEY,
+    MemoryClient,
+    create_memory_mcp_server,
+)
 from app.core.observability.request_context import (
     generate_request_id,
     generate_trace_id,
@@ -51,6 +56,7 @@ class AgentExecutor:
         hooks: list,
         sdk_session_id: str | None = None,
         user_input_client: UserInputClient | None = None,
+        memory_client: MemoryClient | None = None,
         *,
         request_id: str | None = None,
         trace_id: str | None = None,
@@ -59,6 +65,10 @@ class AgentExecutor:
         self.sdk_session_id = sdk_session_id
         self.hooks = HookManager(hooks)
         self.user_input_client = user_input_client
+        self.memory_client = memory_client
+        self.memory_mcp_server = (
+            create_memory_mcp_server(memory_client) if memory_client else None
+        )
         self._request_id = request_id
         self._trace_id = trace_id
         self.workspace = WorkspaceManager(
@@ -101,7 +111,8 @@ class AgentExecutor:
                     prompt = f"{input_hint}\n\n{prompt}"
 
                 prompt_appendix = build_prompt_appendix(
-                    browser_enabled=config.browser_enabled
+                    browser_enabled=config.browser_enabled,
+                    memory_enabled=bool(self.memory_mcp_server),
                 )
                 if prompt_appendix:
                     prompt = f"{prompt}\n\n{prompt_appendix}"
@@ -245,6 +256,7 @@ class AgentExecutor:
                 return PermissionResultAllow(updated_input=input_data)
 
             mcp_servers = dict(config.mcp_config or {})
+            mcp_servers = self._inject_memory_mcp(mcp_servers)
             if config.browser_enabled:
                 mcp_servers = self._inject_playwright_mcp(mcp_servers)
 
@@ -422,4 +434,15 @@ exec npx -y @playwright/mcp@latest --cdp-endpoint {cdp_endpoint!r} --caps vision
 
         injected = dict(mcp_servers)
         injected[key] = {"command": "bash", "args": ["-lc", wait_then_start]}
+        return injected
+
+    def _inject_memory_mcp(self, mcp_servers: dict) -> dict:
+        """Inject built-in memory MCP server for user-level memory tools."""
+        if not self.memory_mcp_server:
+            return mcp_servers
+        if MEMORY_MCP_SERVER_KEY in mcp_servers:
+            return mcp_servers
+
+        injected = dict(mcp_servers)
+        injected[MEMORY_MCP_SERVER_KEY] = self.memory_mcp_server
         return injected

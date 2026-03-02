@@ -10,9 +10,20 @@ Browser capability note:
 - Use browser tools when web inspection or web interaction helps.
 """.strip()
 
+PROMPT_APPEND_MEMORY_ENABLED = """
+Memory capability note:
+- Built-in user-level memory tools are enabled for this task.
+- Search relevant memory before re-asking the user, and store durable preferences/facts when useful.
+""".strip()
 
-def build_prompt_appendix(*, browser_enabled: bool) -> str:
+
+def build_prompt_appendix(
+    *, browser_enabled: bool, memory_enabled: bool = False
+) -> str:
     """Build the static prompt appendix for current capability flags."""
+    sections = [PROMPT_APPEND_BASE]
+    if memory_enabled:
+        sections.append(PROMPT_APPEND_MEMORY_ENABLED)
     if browser_enabled:
-        return f"{PROMPT_APPEND_BASE}\n\n{PROMPT_APPEND_BROWSER_ENABLED}"
-    return PROMPT_APPEND_BASE
+        sections.append(PROMPT_APPEND_BROWSER_ENABLED)
+    return "\n\n".join(sections)

@@ -4,6 +4,7 @@ from fastapi import APIRouter, BackgroundTasks
 
 from app.core.callback import CallbackClient
 from app.core.computer import ComputerClient
+from app.core.memory import MemoryClient
 from app.core.user_input import UserInputClient
 from app.core.engine import AgentExecutor
 from app.hooks.base import AgentHook
@@ -36,6 +37,7 @@ async def run_task(req: TaskRun, background_tasks: BackgroundTasks) -> dict:
     )
     user_input_client = UserInputClient(base_url=base_url)
     computer_client = ComputerClient(base_url=base_url)
+    memory_client = MemoryClient(base_url=base_url, session_id=req.session_id)
     hooks: list[AgentHook] = [
         WorkspaceHook(),
         TodoHook(),
@@ -49,6 +51,7 @@ async def run_task(req: TaskRun, background_tasks: BackgroundTasks) -> dict:
         hooks,
         req.sdk_session_id,
         user_input_client=user_input_client,
+        memory_client=memory_client,
         request_id=get_request_id(),
         trace_id=get_trace_id(),
     )
