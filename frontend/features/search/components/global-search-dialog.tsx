@@ -91,7 +91,7 @@ export function GlobalSearchDialog({
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
-      className="top-[35%]"
+      className="top-[35%] translate-y-0"
       commandProps={{ shouldFilter: false }}
     >
       <CommandInput
@@ -116,6 +116,7 @@ export function GlobalSearchDialog({
             {tasks.map((task) => (
               <CommandItem
                 key={task.id}
+                value={`task:${task.id}`}
                 onSelect={() => handleSelect("task", task.id)}
               >
                 <FileText className="size-4 text-muted-foreground" />
@@ -135,6 +136,7 @@ export function GlobalSearchDialog({
             {projects.map((project) => (
               <CommandItem
                 key={project.id}
+                value={`project:${project.id}`}
                 onSelect={() => handleSelect("project", project.id)}
               >
                 <Folder className="size-4 text-muted-foreground" />
@@ -154,6 +156,7 @@ export function GlobalSearchDialog({
             {messages.slice(0, 5).map((message) => (
               <CommandItem
                 key={message.id}
+                value={`message:${message.id}`}
                 onSelect={() => handleSelect("message", message.chatId)}
               >
                 <MessageSquare className="size-4 text-muted-foreground" />
