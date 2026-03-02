@@ -1,12 +1,9 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
-from app.core.deps import get_current_user_id
-from app.core.errors.error_codes import ErrorCode
-from app.core.errors.exceptions import AppException
-from app.core.settings import get_settings
+from app.core.deps import get_current_user_id, require_internal_token
 from app.schemas.memory import (
     MemoryConfigureRequest,
     MemoryCreateRequest,
@@ -19,22 +16,6 @@ from app.services.memory_service import MemoryService
 router = APIRouter(prefix="/memories", tags=["memories"])
 
 memory_service = MemoryService()
-
-
-def require_internal_token(
-    x_internal_token: str | None = Header(default=None, alias="X-Internal-Token"),
-) -> None:
-    settings = get_settings()
-    if not settings.internal_api_token:
-        raise AppException(
-            error_code=ErrorCode.FORBIDDEN,
-            message="Internal API token is not configured",
-        )
-    if not x_internal_token or x_internal_token != settings.internal_api_token:
-        raise AppException(
-            error_code=ErrorCode.FORBIDDEN,
-            message="Invalid internal token",
-        )
 
 
 @router.post("/configure", response_model=ResponseSchema[dict[str, bool]])
