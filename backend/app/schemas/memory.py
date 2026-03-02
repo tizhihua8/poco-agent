@@ -47,3 +47,27 @@ class MemoryUpdateRequest(BaseModel):
     """Request to update a memory."""
 
     data: dict[str, Any] = Field(..., description="Updated memory content.")
+
+
+class InternalMemoryCreateRequest(BaseModel):
+    """Internal request to create memories by session scope."""
+
+    messages: list[MemoryMessage] = Field(
+        ...,
+        min_length=1,
+        description="Conversation messages used to extract and store memories.",
+    )
+    metadata: dict[str, Any] | None = None
+
+
+class InternalMemorySearchRequest(BaseModel):
+    """Internal request to search memories by session scope."""
+
+    query: str = Field(..., description="Search query.")
+    filters: dict[str, Any] | None = None
+
+
+class InternalMemoryUpdateRequest(BaseModel):
+    """Internal request to update memory by session scope."""
+
+    data: dict[str, Any] = Field(..., description="Updated memory content.")

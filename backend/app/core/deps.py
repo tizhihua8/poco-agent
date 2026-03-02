@@ -1,12 +1,14 @@
+import uuid
 from typing import Generator
 
-from fastapi import Header
+from fastapi import Depends, Header
 from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.core.errors.error_codes import ErrorCode
 from app.core.errors.exceptions import AppException
 from app.core.settings import get_settings
+from app.repositories.session_repository import SessionRepository
 
 DEFAULT_USER_ID = "default"
 
@@ -47,3 +49,17 @@ def require_internal_token(
             error_code=ErrorCode.FORBIDDEN,
             message="Invalid internal token",
         )
+
+
+def get_user_id_by_session_id(
+    session_id: uuid.UUID,
+    db: Session = Depends(get_db),
+) -> str:
+    """Resolve user id by session id for internal APIs."""
+    db_session = SessionRepository.get_by_id(db, session_id)
+    if not db_session:
+        raise AppException(
+            error_code=ErrorCode.NOT_FOUND,
+            message=f"Session not found: {session_id}",
+        )
+    return db_session.user_id
