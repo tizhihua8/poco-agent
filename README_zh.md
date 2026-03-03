@@ -19,13 +19,31 @@
 
 ## 核心功能
 
-- **安全沙箱**：任务在隔离容器中运行 - 可自由安装依赖或修改文件，不影响宿主环境
-- **精美界面 & 移动端支持**：提供美观的 Web 界面和输出预览，随时随地用手机操控你的 Agent。同时支持 Telegram 和钉钉，实现无缝 IM 集成
-- **零配置开箱即用**：无需复杂的环境搭建 - 一键 Docker 启动，拥有完整运行环境
-- **完整能力 & MCP/Skills 扩展**：完整复刻 Claude Code 原生功能（Slash Commands、Plan Mode、AskQuestion），支持 MCP 协议或自定义 Skills 实现无限扩展
-- **异步 & 定时任务**：支持后台执行和定时触发 - 即使关闭浏览器，Agent 也在云端持续工作
-- **智能记忆**：基于 mem0 实现 - Agent 能够记住你的偏好、项目上下文和历史交互，提供越来越个性化的帮助
-- **更多功能**：内置**浏览器**实现自主网络研究、**GitHub 仓库连接**支持，还有更多强大功能等你发现！
+- **安全沙箱（Secure Sandbox）**
+  所有任务运行在隔离容器中，可自由安装依赖、修改文件与执行命令，**不影响宿主环境**。
+- **不仅是 ChatBot**
+  - 支持**计划模式（Plan Mode）**、对话排队、对话终止等能力
+  - **项目管理**：更好地组织与切换不同任务/上下文
+  - **文件上传**：支持多种文件格式输入与处理
+- **精美而高效的界面**
+  - **产物界面**：支持多种格式渲染与预览（HTML、PDF、Markdown、图片、视频、Xmind、Excalidraw、Drawio 等）
+  - **回放界面**：可回看命令输入输出、浏览器操作与 Skills/MCP 调用记录
+  - 支持**明暗模式**
+- **Agentic 体验**
+  - 完整复刻 **Claude Code** 原生体验：Slash Commands、Plan Mode、AskQuestion
+  - 支持 **MCP 协议** 与自定义 Skills：易导入、可无限扩展
+  - 内置**浏览器**：支持自主网络研究与信息整合
+  - 支持 **GitHub 仓库连接**：代码检索、阅读与编辑
+  - 支持**后台执行与定时任务**：即使关闭浏览器，Agent 也能在云端持续运行
+- **交互重构（多端与消息驱动）**
+  - **移动端支持**：随时随地操控你的 Agent
+  - **IM 支持**：钉钉 / Telegram 消息传递，支持推送与事件订阅
+  - **个人部署**：一键 Docker 启动，获得完整运行环境
+  - **云端订阅**：敬请期待
+  - **多语言支持**
+- **智能记忆（Smart Memory）**
+  Powered by **mem0**：Agent 能记住你的偏好、项目上下文与历史交互，让协作越来越顺手。
+- **更多能力等你发现！**
 
 ## 快速开始
 
@@ -39,6 +57,6 @@
 
 详细的部署文档和问题排查，请参考 [部署指南](./docs/zh/README.md)。
 
-## Star 趋势
+## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=poco-ai/poco-agent&type=date&legend=top-left)](https://www.star-history.com/#poco-ai/poco-agent&type=date&legend=top-left)

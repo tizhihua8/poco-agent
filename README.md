@@ -19,13 +19,31 @@ A safer, more beautiful, and easier-to-use OpenClaw alternative
 
 ## Core Features
 
-- **Secure Sandbox**: Tasks run in isolated containers - install dependencies or modify files freely without affecting your host environment.
-- **Beautiful UI & Mobile Support**: Provides an attractive web interface with output previews, allowing you to command your Agent from anywhere on your phone. Also supports Telegram and DingTalk for seamless IM integration.
-- **Zero Configuration Ready-to-Use**: No complex local environment setup needed - one-click Docker launch with a complete runtime environment.
-- **Complete Capabilities & MCP/Skills Extensions**: Fully replicates Claude Code native features (Slash Commands, Plan Mode, AskQuestion), and supports MCP protocol or custom Skills for unlimited extensibility.
-- **Async & Scheduled Tasks**: Supports background execution and scheduled triggers - your Agent keeps working in the cloud even with the browser closed.
-- **Smart Memory**: Powered by mem0 - Agent remembers your preferences, project context, and past interactions for increasingly personalized assistance.
-- **More Features**: Built-in **browser** for autonomous web research, **GitHub repository connection** support, and many more powerful features waiting to be discovered!
+- **Secure Sandbox**
+  All tasks run in an isolated container. Feel free to install dependencies, modify files, and execute commands — without affecting the host environment.
+- **More Than a Chatbot**
+  - Supports Plan Mode, conversation queueing, conversation termination ...
+  - **Project management**: organize and switch between tasks and contexts more effectively
+  - **File uploads**: accept and work with multiple file formats
+- **Polished, Productive UI**
+  - **Artifacts view**: render and preview many formats (HTML, PDF, Markdown, images, videos, Xmind, Excalidraw, Drawio, and more)
+  - **Playback view**: replay command I/O, browser sessions, and Skills/MCP tool calls
+  - **Light/Dark mode** support
+- **Agentic Experience**
+  - **native Claude Code experience** - Slash Commands, Plan Mode, AskQuestion ...
+  - **MCP & Skills** - easy to import and infinitely extensible
+  - **Browser** - Built-in browser for autonomous web research
+  - **GitHub repo integration** for code search and editing
+  - **Background execution & scheduled triggers** — your agent can keep running in the cloud even after you close the browser
+- **Interaction**
+  - **Mobile support**: control your agent anytime, anywhere
+  - **IM integration**: messaging via DingTalk and Telegram, with push notifications and event subscriptions
+  - **Self-hosting**: one-click Docker deployment with a full runtime environment
+  - **Cloud subscription**: coming soon
+  - **Multilingual** support
+- **Smart Memory**
+  Powered by **mem0**: the agent remembers your preferences, project context, and past interactions to deliver increasingly personalized help.
+- Many more powerful features waiting for you to discover!
 
 ## Quick Start
 
