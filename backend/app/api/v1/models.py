@@ -15,5 +15,6 @@ async def get_model_config() -> JSONResponse:
     payload = ModelConfigResponse(
         default_model=settings.default_model,
         model_list=settings.model_list,
+        mem0_enabled=settings.mem0_enabled,
     )
     return Response.success(data=payload, message="Models retrieved successfully")

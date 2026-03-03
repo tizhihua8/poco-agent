@@ -71,6 +71,35 @@ class TaskService:
         config["model"] = value
 
     @staticmethod
+    def _normalize_memory_enabled(config: dict) -> None:
+        """Normalize memory toggle with backend-level guardrail.
+
+        Rules:
+        - missing/null -> false
+        - non-boolean -> BAD_REQUEST
+        - MEM0_ENABLED=false -> force false regardless of request
+        """
+        if not isinstance(config, dict):
+            return
+
+        raw = config.get("memory_enabled")
+        if raw is None:
+            requested_enabled = False
+        elif isinstance(raw, bool):
+            requested_enabled = raw
+        else:
+            raise AppException(
+                error_code=ErrorCode.BAD_REQUEST,
+                message="memory_enabled must be a boolean or null",
+            )
+
+        if not get_settings().mem0_enabled:
+            config["memory_enabled"] = False
+            return
+
+        config["memory_enabled"] = requested_enabled
+
+    @staticmethod
     def _apply_project_repo_defaults(config: dict | None, project) -> dict | None:
         """Fill repo context from project defaults when not explicitly provided by the caller."""
         if not isinstance(config, dict) or not project:
@@ -350,6 +379,7 @@ class TaskService:
 
         # Validate and normalize `model` after merging base + overrides.
         self._validate_and_normalize_model(merged_base)
+        self._normalize_memory_enabled(merged_base)
 
         if mcp_toggles is not None:
             merged_base["mcp_server_ids"] = (

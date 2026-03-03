@@ -6,3 +6,4 @@ class ModelConfigResponse(BaseModel):
 
     default_model: str
     model_list: list[str] = Field(default_factory=list)
+    mem0_enabled: bool = False
