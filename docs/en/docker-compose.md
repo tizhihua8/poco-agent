@@ -98,6 +98,32 @@ S3_FORCE_PATH_STYLE=false
 # S3_PUBLIC_ENDPOINT=https://<accountid>.r2.cloudflarestorage.com
 ```
 
+R2 bucket CORS policy (important, for browser preview/download of presigned URLs):
+
+```json
+[
+  {
+    "AllowedOrigins": ["http://localhost:3000"],
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedHeaders": ["*"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
+
+Notes:
+
+- Add every frontend origin you actually use to `AllowedOrigins` (for example production domain, staging domain, and local `http://localhost:3000`).
+- `HEAD` is recommended because some viewers/probes check metadata first.
+- `Range` helps PDF/video/large-file partial loading work reliably.
+- If CORS is missing/misconfigured, you may still get a valid presigned URL from backend, but browser `fetch`/preview can fail with CORS errors.
+
+Quick validation (in browser devtools network tab):
+
+- Verify artifact URL responses include `Access-Control-Allow-Origin`.
+- Verify requests used by viewers/downloader can complete (including `HEAD` or range requests when present).
+- If you use `S3_PUBLIC_ENDPOINT`, ensure it points to a browser-reachable domain.
+
 Start (no rustfs):
 
 ```bash

@@ -98,6 +98,32 @@ S3_FORCE_PATH_STYLE=false
 # S3_PUBLIC_ENDPOINT=https://<accountid>.r2.cloudflarestorage.com
 ```
 
+R2 bucket 的 CORS 配置（重要，用于浏览器预览/下载预签名 URL）：
+
+```json
+[
+  {
+    "AllowedOrigins": ["http://localhost:3000"],
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedHeaders": ["*"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
+
+说明：
+
+- `AllowedOrigins` 里要包含你实际使用的所有前端域名（例如生产域名、预发域名、本地 `http://localhost:3000`）。
+- 建议放行 `HEAD`，因为部分预览器/探测逻辑会先请求对象元信息。
+- `Range` 能提升 PDF、视频、大文件分片加载的稳定性。
+- 如果 CORS 没配或配错，后端即使返回了有效预签名 URL，浏览器侧 `fetch`/预览仍可能报跨域错误。
+
+快速自检（浏览器 DevTools -> Network）：
+
+- 检查构件 URL 的响应是否带有 `Access-Control-Allow-Origin`。
+- 检查预览/下载相关请求是否都成功（包括 `HEAD` 或分片请求）。
+- 如果设置了 `S3_PUBLIC_ENDPOINT`，确认它是浏览器可达的公网或可访问域名。
+
 启动（不会启动 rustfs）：
 
 ```bash
