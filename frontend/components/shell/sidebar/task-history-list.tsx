@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   MoreHorizontal,
   FolderPlus,
@@ -51,6 +51,7 @@ interface Project {
 
 interface DraggableTaskProps {
   task: TaskHistoryItem;
+  isActive?: boolean;
   isPinned: boolean;
   lng?: string;
   onDeleteTask: (taskId: string) => Promise<void> | void;
@@ -78,6 +79,7 @@ interface DraggableTaskProps {
 
 function DraggableTask({
   task,
+  isActive,
   isPinned,
   lng,
   onDeleteTask,
@@ -160,6 +162,7 @@ function DraggableTask({
       ) : (
         <div className="relative group/task-card">
           <SidebarMenuButton
+            isActive={isActive}
             className={cn(
               SIDEBAR_CARD_WITH_ACTION_CLASS,
               isNested && SIDEBAR_CARD_NESTED_INSET_CLASS,
@@ -343,6 +346,9 @@ export function TaskHistoryList({
   isNested?: boolean;
   onNavigate?: () => void;
 }) {
+  const params = useParams();
+  const activeTaskId =
+    typeof params?.id === "string" ? (params.id as string) : undefined;
   const lng = useLanguage();
   const pinnedOrder = React.useMemo(() => {
     const orderMap = new Map<string, number>();
@@ -414,6 +420,7 @@ export function TaskHistoryList({
           <DraggableTask
             key={task.id}
             task={task}
+            isActive={task.id === activeTaskId}
             isPinned={pinnedOrder.has(task.id)}
             lng={lng}
             onDeleteTask={onDeleteTask}
