@@ -157,6 +157,9 @@ services:
       EXECUTOR_BROWSER_IMAGE: ${EXECUTOR_BROWSER_IMAGE:-ghcr.io/poco-ai/poco-executor:full}
       # Default desktop viewport for browser-enabled runs (Playwright MCP).
       POCO_BROWSER_VIEWPORT_SIZE: ${POCO_BROWSER_VIEWPORT_SIZE:-1366x768}
+      # Default Playwright MCP output handling for browser-enabled runs.
+      PLAYWRIGHT_MCP_OUTPUT_MODE: ${PLAYWRIGHT_MCP_OUTPUT_MODE:-file}
+      PLAYWRIGHT_MCP_IMAGE_RESPONSES: ${PLAYWRIGHT_MCP_IMAGE_RESPONSES:-omit}
       # Timezone passed through to executor containers.
       EXECUTOR_TIMEZONE: ${EXECUTOR_TIMEZONE:-Asia/Shanghai}
       # Manager accesses executor containers through published host ports.

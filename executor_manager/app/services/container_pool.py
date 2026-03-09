@@ -172,6 +172,12 @@ class ContainerPool:
             environment["POCO_BROWSER_VIEWPORT_SIZE"] = (
                 self.settings.poco_browser_viewport_size
             )
+            environment["PLAYWRIGHT_MCP_OUTPUT_MODE"] = (
+                self.settings.playwright_mcp_output_mode
+            )
+            environment["PLAYWRIGHT_MCP_IMAGE_RESPONSES"] = (
+                self.settings.playwright_mcp_image_responses
+            )
         container = self.docker_client.containers.run(
             image=image,
             name=container_name,
