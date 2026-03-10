@@ -12,6 +12,10 @@ export function useModelCatalog(options?: { enabled?: boolean }) {
   const [modelConfig, setModelConfig] =
     React.useState<ModelConfigResponse | null>(null);
   const [isLoading, setIsLoading] = React.useState(enabled);
+  const modelOptions = React.useMemo(
+    () => buildModelCatalogOptions(modelConfig),
+    [modelConfig],
+  );
 
   const refresh = React.useCallback(async () => {
     if (!enabled) {
@@ -58,7 +62,7 @@ export function useModelCatalog(options?: { enabled?: boolean }) {
 
   return {
     modelConfig,
-    modelOptions: buildModelCatalogOptions(modelConfig),
+    modelOptions,
     isLoading,
     refresh,
   };

@@ -27,6 +27,16 @@ import {
 
 const MODEL_STORAGE_KEY = "poco_selected_model";
 
+function isSameSelection(
+  left: ModelSelection | null | undefined,
+  right: ModelSelection | null | undefined,
+): boolean {
+  return (
+    (left?.modelId || "") === (right?.modelId || "") &&
+    (left?.providerId || "") === (right?.providerId || "")
+  );
+}
+
 export function HomePageClient() {
   const { t } = useT("translation");
   const router = useRouter();
@@ -66,7 +76,7 @@ export function HomePageClient() {
     }
 
     if (!saved?.modelId || saved.modelId === defaultModel) {
-      setSelectedModel(null);
+      setSelectedModel((prev) => (prev ? null : prev));
       return;
     }
 
@@ -86,11 +96,13 @@ export function HomePageClient() {
       } catch {
         // Ignore storage failures (e.g., privacy mode).
       }
-      setSelectedModel(null);
+      setSelectedModel((prev) => (prev ? null : prev));
       return;
     }
 
-    setSelectedModel(normalizedSaved);
+    setSelectedModel((prev) =>
+      isSameSelection(prev, normalizedSaved) ? prev : normalizedSaved,
+    );
   }, [modelConfig, modelOptions, selectableOptionKeys]);
 
   const handleSelectModel = React.useCallback(
