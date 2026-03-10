@@ -456,7 +456,12 @@ export function ChatMessageList({
     >
       <ScrollArea
         ref={scrollAreaRef}
-        className="h-full w-full min-w-0"
+        className={cn(
+          "h-full w-full min-w-0",
+          "[&_[data-radix-scroll-area-viewport]>div]:!block",
+          "[&_[data-radix-scroll-area-viewport]>div]:!min-w-0",
+          "[&_[data-radix-scroll-area-viewport]>div]:!w-full",
+        )}
         data-chat-scroll-area
       >
         <div

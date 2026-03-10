@@ -422,12 +422,11 @@ export function TaskComposer({
               isSubmitting={isSubmitting}
               isUploading={upload.isUploading}
               canSubmit={canSubmit}
+              repoUrl={repoUrl}
+              repoDialogOpen={repoDialogOpen}
               browserEnabled={browserEnabled}
-              memoryEnabled={memoryEnabled}
-              showMemoryToggle={memoryFeatureEnabled}
               onOpenRepoDialog={() => setRepoDialogOpen(true)}
               onBrowserEnabledChange={setBrowserEnabled}
-              onMemoryEnabledChange={setMemoryEnabled}
               onOpenFileInput={() => fileInputRef.current?.click()}
               onSubmit={handleSubmit}
               scheduledSummary={

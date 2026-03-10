@@ -5,10 +5,10 @@ import {
   Loader2,
   ArrowUp,
   Plus,
+  Github,
   Settings2,
   Clock,
   Chrome,
-  Brain,
   Paperclip,
   Code2,
   SquareTerminal,
@@ -50,12 +50,11 @@ interface ComposerToolbarProps {
   isSubmitting?: boolean;
   isUploading: boolean;
   canSubmit: boolean;
+  repoUrl: string;
+  repoDialogOpen: boolean;
   browserEnabled: boolean;
-  memoryEnabled: boolean;
-  showMemoryToggle: boolean;
   onOpenRepoDialog: () => void;
   onBrowserEnabledChange: (enabled: boolean) => void;
-  onMemoryEnabledChange: (enabled: boolean) => void;
   onOpenFileInput: () => void;
   onSubmit: () => void;
   scheduledSummary?: string;
@@ -73,12 +72,11 @@ export function ComposerToolbar({
   isSubmitting,
   isUploading,
   canSubmit,
+  repoUrl,
+  repoDialogOpen,
   browserEnabled,
-  memoryEnabled,
-  showMemoryToggle,
   onOpenRepoDialog,
   onBrowserEnabledChange,
-  onMemoryEnabledChange,
   onOpenFileInput,
   onSubmit,
   scheduledSummary,
@@ -132,69 +130,23 @@ export function ComposerToolbar({
           </TooltipContent>
         </Tooltip>
 
-        {/* Configure menu: mode + browser */}
         <Tooltip>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  disabled={disabled}
-                  className="size-9 rounded-xl border border-transparent text-muted-foreground hover:bg-accent hover:text-foreground data-[state=open]:border-border data-[state=open]:bg-accent/60 data-[state=open]:text-foreground"
-                  aria-label={t("hero.configure")}
-                  data-onboarding="home-mode-toggle"
-                >
-                  <Settings2 className="size-4" />
-                </Button>
-              </TooltipTrigger>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="start"
-              side="top"
-              sideOffset={8}
-              className="w-52"
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant={repoDialogOpen || repoUrl.trim() ? "secondary" : "ghost"}
+              size="icon"
+              disabled={disabled}
+              className="size-9 rounded-xl hover:bg-accent"
+              aria-label={t("hero.importCode")}
+              title={t("hero.importCode")}
+              onClick={onOpenRepoDialog}
             >
-              <DropdownMenuRadioGroup
-                value={mode}
-                onValueChange={(next) => onModeChange(next as ComposerMode)}
-              >
-                {COMPOSER_MODE_SEQUENCE.map((value) => {
-                  const Icon = MODE_ICONS[value];
-                  return (
-                    <DropdownMenuRadioItem key={value} value={value}>
-                      <Icon className="size-4" />
-                      <span>{t(`hero.modeLabels.${value}`)}</span>
-                    </DropdownMenuRadioItem>
-                  );
-                })}
-              </DropdownMenuRadioGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem
-                checked={browserEnabled}
-                onCheckedChange={(next) => {
-                  onBrowserEnabledChange(Boolean(next));
-                }}
-              >
-                <Chrome className="size-4" />
-                <span>{t("hero.browser.toggle")}</span>
-              </DropdownMenuCheckboxItem>
-              {showMemoryToggle ? (
-                <DropdownMenuCheckboxItem
-                  checked={memoryEnabled}
-                  onCheckedChange={(next) => {
-                    onMemoryEnabledChange(Boolean(next));
-                  }}
-                >
-                  <Brain className="size-4" />
-                  <span>{t("chat.toolNameMap.memory")}</span>
-                </DropdownMenuCheckboxItem>
-              ) : null}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <Github className="size-4" />
+            </Button>
+          </TooltipTrigger>
           <TooltipContent side="top" sideOffset={8}>
-            {t("hero.configure")}
+            {t("hero.importCode")}
           </TooltipContent>
         </Tooltip>
 
@@ -255,6 +207,61 @@ export function ComposerToolbar({
 
       {/* Right: send */}
       <div className="flex items-center gap-1">
+        {/* Configure menu: mode + browser */}
+        <Tooltip>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  disabled={disabled}
+                  className="size-9 rounded-xl border border-transparent text-muted-foreground hover:bg-accent hover:text-foreground data-[state=open]:border-border data-[state=open]:bg-accent/60 data-[state=open]:text-foreground"
+                  aria-label={t("hero.configure")}
+                  data-onboarding="home-mode-toggle"
+                >
+                  <Settings2 className="size-4" />
+                </Button>
+              </TooltipTrigger>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              side="top"
+              sideOffset={8}
+              className="w-52"
+            >
+              <DropdownMenuRadioGroup
+                value={mode}
+                onValueChange={(next) => onModeChange(next as ComposerMode)}
+              >
+                {COMPOSER_MODE_SEQUENCE.map((value) => {
+                  const Icon = MODE_ICONS[value];
+                  return (
+                    <DropdownMenuRadioItem key={value} value={value}>
+                      <Icon className="size-4" />
+                      <span>{t(`hero.modeLabels.${value}`)}</span>
+                    </DropdownMenuRadioItem>
+                  );
+                })}
+              </DropdownMenuRadioGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem
+                checked={browserEnabled}
+                onCheckedChange={(next) => {
+                  onBrowserEnabledChange(Boolean(next));
+                }}
+              >
+                <Chrome className="size-4" />
+                <span>{t("hero.browser.toggle")}</span>
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <TooltipContent side="top" sideOffset={8}>
+            {t("hero.configure")}
+          </TooltipContent>
+        </Tooltip>
+
         <Button
           onClick={onSubmit}
           disabled={!canSubmit || disabled}
