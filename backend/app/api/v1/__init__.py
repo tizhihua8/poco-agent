@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.v1 import (
     attachments,
+    audio,
     callback,
     claude_md,
     env_vars,
@@ -55,6 +56,7 @@ api_v1_router.include_router(projects.router)
 api_v1_router.include_router(tool_executions.router)
 api_v1_router.include_router(usage.router)
 api_v1_router.include_router(attachments.router)
+api_v1_router.include_router(audio.router)
 api_v1_router.include_router(env_vars.router)
 api_v1_router.include_router(claude_md.router)
 api_v1_router.include_router(models.router)
