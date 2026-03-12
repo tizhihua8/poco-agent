@@ -10,6 +10,7 @@ from app.core.observability.request_context import get_request_id, get_trace_id
 from app.core.settings import get_settings
 from app.scheduler.scheduler_config import scheduler
 from app.scheduler.task_dispatcher import TaskDispatcher
+from app.services.executor_runtime_service import ExecutorRuntimeService
 from app.schemas.task import (
     SessionStatusResponse,
     TaskCreateResponse,
@@ -24,6 +25,7 @@ class TaskService:
 
     def __init__(self) -> None:
         self.settings = get_settings()
+        self.runtime_service = ExecutorRuntimeService(self.settings)
 
     async def create_task(
         self,
@@ -98,13 +100,12 @@ class TaskService:
             container_mode = config.get("container_mode", "ephemeral")
 
             if container_id or container_mode == "persistent":
-                container_pool = TaskDispatcher.get_container_pool()
                 step_started = time.perf_counter()
                 browser_enabled = bool(config.get("browser_enabled"))
                 (
                     container_url,
                     container_id,
-                ) = await container_pool.get_or_create_container(
+                ) = await TaskDispatcher.resolve_executor_target(
                     session_id=session_id,
                     user_id=user_id,
                     browser_enabled=browser_enabled,
@@ -124,6 +125,8 @@ class TaskService:
                         "browser_enabled": browser_enabled,
                     },
                 )
+            elif not self.runtime_service.uses_docker_runtime():
+                container_url = self.runtime_service.get_executor_url()
 
             enqueued_at = time.perf_counter()
             step_started = time.perf_counter()
@@ -259,3 +262,4 @@ class TaskService:
                 error_code=ErrorCode.BACKEND_UNAVAILABLE,
                 message=str(e),
             )
+

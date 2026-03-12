@@ -1,8 +1,12 @@
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 
 class Settings(BaseSettings):
@@ -20,6 +24,13 @@ class Settings(BaseSettings):
     backend_url: str = Field(default="http://localhost:8000")
     executor_url: str = Field(default="http://localhost:8080")
     callback_base_url: str = Field(default="http://localhost:8001")
+    executor_runtime_mode: Literal["docker", "direct"] = Field(
+        default="docker", alias="EXECUTOR_RUNTIME_MODE"
+    )
+    executor_direct_callback_base_url: str = Field(
+        default="http://localhost:8001",
+        alias="EXECUTOR_DIRECT_CALLBACK_BASE_URL",
+    )
 
     # Scheduler configuration
     max_concurrent_tasks: int = Field(default=5)
@@ -39,6 +50,9 @@ class Settings(BaseSettings):
     # include staging skills/attachments + spawning the executor container, which may take
     # longer than 30s on slow networks or large repos.
     task_claim_lease_seconds: int = Field(default=900, alias="TASK_CLAIM_LEASE_SECONDS")
+    task_claim_lease_seconds_direct: int = Field(
+        default=60, alias="TASK_CLAIM_LEASE_SECONDS_DIRECT"
+    )
 
     # Optional schedule config file (TOML/JSON). When provided, it becomes the source of truth.
     schedule_config_path: str | None = Field(default=None, alias="SCHEDULE_CONFIG_PATH")
@@ -150,7 +164,7 @@ class Settings(BaseSettings):
     s3_max_attempts: int = Field(default=3, alias="S3_MAX_ATTEMPTS")
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=ENV_FILE,
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -167,3 +181,5 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+

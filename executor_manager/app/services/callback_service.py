@@ -144,7 +144,8 @@ class CallbackService:
                 "session_id": callback.session_id,
                 "status": callback.status,
                 "progress": callback.progress,
-                "sdk_session_id": callback.sdk_session_id,
+"sdk_session_id": callback.sdk_session_id,
+"run_id": callback.run_id,
             },
         )
 
@@ -185,8 +186,9 @@ class CallbackService:
                     "task_terminal_callback_received",
                     extra={
                         "session_id": callback.session_id,
-                        "status": callback.status,
-                    },
+    "status": callback.status,
+    "run_id": callback.run_id,
+},
                 )
                 asyncio.create_task(self._export_and_forward(callback))
                 await TaskDispatcher.on_task_complete(callback.session_id)
@@ -221,8 +223,9 @@ class CallbackService:
             result = None
 
         payload_model = AgentCallbackRequest(
-            session_id=callback.session_id,
-            time=datetime.now(timezone.utc),
+session_id=callback.session_id,
+run_id=callback.run_id,
+time=datetime.now(timezone.utc),
             status=callback.status,
             progress=100 if callback.status == "completed" else callback.progress,
             error_message=callback.error_message,
