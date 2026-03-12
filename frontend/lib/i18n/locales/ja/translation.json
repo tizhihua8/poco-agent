@@ -172,6 +172,7 @@
       "loading": "読み込み中...",
       "noServers": "インストールされているMCPサーバーがありません。最初にMCPページからサーバーをインストールしてください。",
       "selected": "{{count}}/{{total}}サーバーが選択されました",
+      "toggleServer": "{{name}} を切り替え",
       "cancel": "キャンセル",
       "confirm": "確認"
     },
@@ -1487,6 +1488,9 @@
   },
   "mcpSettings": {
     "configureServer": "MCPサーバーを設定",
+    "descriptionHint": "一覧やタスク設定でこの MCP の用途を見分けやすくします。実際の接続設定には影響しません。",
+    "descriptionPlaceholder": "例: GitHub の Issue や PR を検索",
+    "descriptionRecommended": "説明（入力推奨）",
     "fullJsonConfig": "完全なJSON設定",
     "mcpName": "MCP名",
     "jsonConfig": "完全なJSON設定",

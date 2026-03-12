@@ -174,6 +174,7 @@
       "loading": "Loading...",
       "noServers": "No installed MCP servers. Please install servers from the MCP page first.",
       "selected": "{{count}}/{{total}} servers selected",
+      "toggleServer": "Toggle {{name}}",
       "cancel": "Cancel",
       "confirm": "Confirm"
     },
@@ -1600,6 +1601,9 @@
   },
   "mcpSettings": {
     "configureServer": "Configure MCP Server",
+    "descriptionHint": "Helps users identify this MCP in lists and task setup. Does not affect the actual connection.",
+    "descriptionPlaceholder": "e.g. Search GitHub issues and pull requests",
+    "descriptionRecommended": "Description (recommended)",
     "fullJsonConfig": "Complete JSON configuration",
     "mcpName": "MCP Name",
     "jsonConfig": "Complete JSON configuration",

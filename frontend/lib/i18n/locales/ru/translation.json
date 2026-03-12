@@ -159,6 +159,7 @@
       "loading": "Загрузка...",
       "noServers": "Нет установленных MCP серверов. Сначала установите серверы со страницы MCP.",
       "selected": "{{count}}/{{total}} серверов выбрано",
+      "toggleServer": "Переключить {{name}}",
       "cancel": "Отмена",
       "confirm": "Подтвердить"
     },
@@ -1487,6 +1488,9 @@
   },
   "mcpSettings": {
     "configureServer": "Настроить MCP сервер",
+    "descriptionHint": "Помогает быстрее распознавать этот MCP в списках и при настройке задач. Не влияет на реальное подключение.",
+    "descriptionPlaceholder": "Например: поиск issues и pull request в GitHub",
+    "descriptionRecommended": "Описание (рекомендуется)",
     "fullJsonConfig": "Полная конфигурация JSON",
     "mcpName": "Имя MCP",
     "jsonConfig": "Полная конфигурация JSON",

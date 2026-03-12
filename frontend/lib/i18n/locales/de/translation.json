@@ -173,6 +173,7 @@
       "loading": "Laden...",
       "noServers": "Keine MCP-Server installiert. Bitte installieren Sie zuerst Server von der MCP-Seite.",
       "selected": "{{count}}/{{total}} Server ausgewählt",
+      "toggleServer": "{{name}} umschalten",
       "cancel": "Abbrechen",
       "confirm": "Bestätigen"
     },
@@ -1491,6 +1492,9 @@
   },
   "mcpSettings": {
     "configureServer": "MCP-Server konfigurieren",
+    "descriptionHint": "Hilft dabei, dieses MCP in Listen und bei der Aufgaben-Konfiguration zu erkennen. Beeinflusst die eigentliche Verbindung nicht.",
+    "descriptionPlaceholder": "z. B. GitHub-Issues und Pull Requests durchsuchen",
+    "descriptionRecommended": "Beschreibung (empfohlen)",
     "fullJsonConfig": "Vollständige JSON-Konfiguration",
     "mcpName": "MCP-Name",
     "jsonConfig": "Vollständige JSON-Konfiguration",
