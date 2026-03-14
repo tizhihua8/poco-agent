@@ -218,8 +218,13 @@ const regenerateMessageSchema = z.object({
 export type RegenerateMessageInput = z.infer<typeof regenerateMessageSchema>;
 
 export async function regenerateMessageAction(input: RegenerateMessageInput) {
-  const { sessionId, userMessageId, assistantMessageId, model, model_provider_id } =
-    regenerateMessageSchema.parse(input);
+  const {
+    sessionId,
+    userMessageId,
+    assistantMessageId,
+    model,
+    model_provider_id,
+  } = regenerateMessageSchema.parse(input);
   const result = await chatService.regenerateMessage(sessionId, {
     user_message_id: userMessageId,
     assistant_message_id: assistantMessageId,
