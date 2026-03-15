@@ -1063,7 +1063,8 @@
       },
       "scope": {
         "system": "系统",
-        "user": "个人"
+        "user": "个人",
+        "builtin": "内置"
       },
       "fields": {
         "id": "id",

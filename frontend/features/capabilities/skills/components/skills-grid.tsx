@@ -113,6 +113,7 @@ export function SkillsGrid({
             duration={400}
             renderItem={(skill) => {
               const install = installBySkillId.get(skill.id);
+              const isBuiltin = skill.scope === "system";
               const isInstalled = Boolean(install);
               const isRowLoading =
                 isLoading ||
@@ -146,7 +147,7 @@ export function SkillsGrid({
                         variant="outline"
                         className="text-xs text-muted-foreground"
                       >
-                        {skill.scope === "system"
+                        {isBuiltin
                           ? t("library.skillsManager.scope.system")
                           : t("library.skillsManager.scope.user")}
                       </Badge>
@@ -158,7 +159,11 @@ export function SkillsGrid({
                     ) : null}
                   </div>
 
-                  {isInstalled && install ? (
+                  {isBuiltin ? (
+                    <Badge variant="secondary" className="shrink-0">
+                      {t("library.skillsManager.scope.builtin")}
+                    </Badge>
+                  ) : isInstalled && install ? (
                     <div className="flex items-center gap-2">
                       {skill.scope === "user" && (
                         <Button

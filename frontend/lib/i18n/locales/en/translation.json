@@ -1063,7 +1063,8 @@
       },
       "scope": {
         "system": "System",
-        "user": "User"
+        "user": "User",
+        "builtin": "Built-in"
       },
       "fields": {
         "id": "id",

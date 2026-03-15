@@ -30,6 +30,20 @@ class SkillRepository:
         )
 
     @staticmethod
+    def get_by_name_and_scope(
+        session_db: Session, name: str, scope: str
+    ) -> Skill | None:
+        """Get a skill by name within a scope."""
+        return (
+            session_db.query(Skill)
+            .filter(
+                Skill.name == name,
+                Skill.scope == scope,
+            )
+            .first()
+        )
+
+    @staticmethod
     def list_visible(session_db: Session, user_id: str) -> list[Skill]:
         """List skills visible to the user.
 
