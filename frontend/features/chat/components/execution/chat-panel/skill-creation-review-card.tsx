@@ -1,10 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Bot, Loader2, Sparkles, TriangleAlert } from "lucide-react";
+import {
+  AlignLeft,
+  FolderTree,
+  Loader2,
+  PencilLine,
+  Sparkles,
+  TriangleAlert,
+} from "lucide-react";
 import { toast } from "sonner";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -228,15 +234,6 @@ export function SkillCreationReviewCard({
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 pl-10">
-            <Badge variant="secondary" className="gap-1">
-              <Bot className="size-3" />
-              {t("chat.skillCreationReview.badge")}
-            </Badge>
-            <span className="text-xs text-muted-foreground">
-              {creation.detected_name}
-            </span>
-          </div>
         </div>
         {isSubmitting ? (
           <Loader2 className="size-4 animate-spin text-muted-foreground" />
@@ -246,7 +243,11 @@ export function SkillCreationReviewCard({
       <div className="mt-4 grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(440px,0.8fr)]">
         <div className="min-h-0 space-y-4 overflow-y-auto pr-1">
           <div className="space-y-2">
-            <Label htmlFor={`skill-creation-name-${creation.id}`}>
+            <Label
+              htmlFor={`skill-creation-name-${creation.id}`}
+              className="flex items-center gap-2"
+            >
+              <PencilLine className="size-4 text-muted-foreground" />
               {t("chat.skillCreationReview.nameLabel")}
             </Label>
             <Input
@@ -259,7 +260,8 @@ export function SkillCreationReviewCard({
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <AlignLeft className="size-4" />
               {t("chat.skillCreationReview.descriptionLabel")}
             </div>
             <Textarea
@@ -272,7 +274,8 @@ export function SkillCreationReviewCard({
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <FolderTree className="size-4" />
               {t("chat.skillCreationReview.pathLabel")}
             </div>
             <code className="block rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
