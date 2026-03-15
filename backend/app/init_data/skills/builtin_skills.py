@@ -13,6 +13,7 @@ from app.utils.markdown_front_matter import parse_yaml_front_matter
 logger = logging.getLogger(__name__)
 
 SYSTEM_SKILL_OWNER_USER_ID = "__system__"
+INIT_DATA_MANAGER = "init_data"
 _BACKEND_ROOT = Path(__file__).resolve().parents[3]
 _BUILTIN_SKILL_ASSETS_ROOT = _BACKEND_ROOT / "assets" / "skills"
 
@@ -62,25 +63,69 @@ class SkillBootstrapService:
     def bootstrap_builtin_skills(cls, db: Session) -> None:
         """Create or update all built-in skills."""
         storage_service = cls._build_storage_service()
+        cls._cleanup_removed_builtin_skills(db, storage_service)
         for definition in BUILTIN_SKILLS:
             bundle = cls._build_bundle(definition)
             existing = SkillRepository.get_by_name_and_scope(
-                db, definition.name, definition.scope
+                db,
+                definition.name,
+                definition.scope,
             )
-            if not bundle.asset_dir_exists and existing is not None:
-                logger.info(
-                    "builtin_skill_assets_missing_keep_existing",
-                    extra={"skill_name": definition.name},
-                )
-                continue
             cls._sync_bundle_assets(storage_service, bundle, existing)
             cls._ensure_builtin_skill(db, bundle)
+
+    @classmethod
+    def _cleanup_removed_builtin_skills(
+        cls,
+        db: Session,
+        storage_service: S3StorageService | None,
+    ) -> None:
+        declared_names = {definition.name for definition in BUILTIN_SKILLS}
+        existing_skills = SkillRepository.list_by_scope_and_owner(
+            db,
+            scope="system",
+            owner_user_id=SYSTEM_SKILL_OWNER_USER_ID,
+        )
+
+        for skill in existing_skills:
+            if skill.name in declared_names:
+                continue
+            if not cls._is_managed_builtin_skill(skill):
+                continue
+
+            prefix = cls._extract_storage_prefix(skill)
+            if prefix:
+                if storage_service is None:
+                    raise RuntimeError(
+                        "Built-in skill storage is unavailable while removing stale "
+                        f"managed skill: {skill.name}"
+                    )
+                deleted = storage_service.delete_prefix(prefix=prefix)
+                logger.info(
+                    "builtin_skill_storage_removed",
+                    extra={
+                        "skill_name": skill.name,
+                        "prefix": prefix,
+                        "deleted_count": deleted,
+                    },
+                )
+
+            SkillRepository.delete(db, skill)
+            db.flush()
+            logger.info(
+                "builtin_skill_removed_from_db",
+                extra={"skill_name": skill.name},
+            )
 
     @classmethod
     def _ensure_builtin_skill(cls, db: Session, bundle: BuiltinSkillBundle) -> Skill:
         """Create or update a built-in skill with upsert semantics."""
         definition = bundle.definition
-        existing = SkillRepository.get_by_name_and_scope(db, definition.name, definition.scope)
+        existing = SkillRepository.get_by_name_and_scope(
+            db,
+            definition.name,
+            definition.scope,
+        )
 
         if existing is None:
             skill = Skill(
@@ -122,30 +167,21 @@ class SkillBootstrapService:
         }
 
         if not definition.asset_dir.exists():
-            logger.warning(
-                "builtin_skill_assets_missing",
-                extra={
-                    "skill_name": definition.name,
-                    "asset_dir": str(definition.asset_dir),
-                },
-            )
-            return BuiltinSkillBundle(
-                definition=definition,
-                entry=entry,
-                source={
-                    "kind": "system",
-                    "version": "assets-missing",
-                },
-                description=definition.description,
-                asset_dir_exists=False,
+            raise RuntimeError(
+                "Built-in skill assets are missing for declared skill "
+                f"{definition.name}: {definition.asset_dir}"
             )
 
         skill_markdown = cls._read_skill_markdown(definition.asset_dir / "SKILL.md")
         frontmatter = parse_yaml_front_matter(skill_markdown)
-        description = cls._normalize_description(frontmatter.get("description")) or definition.description
+        description = (
+            cls._normalize_description(frontmatter.get("description"))
+            or definition.description
+        )
         version = cls._compute_asset_hash(definition.asset_dir)
         source: dict[str, object] = {
             "kind": "system",
+            "managed_by": INIT_DATA_MANAGER,
             "version": version,
             "asset_dir": f"skills/{definition.asset_dir_name}",
         }
@@ -230,6 +266,42 @@ class SkillBootstrapService:
             return None
         normalized = value.strip()
         return normalized[:1000] if normalized else None
+
+    @staticmethod
+    def _is_managed_builtin_skill(skill: Skill) -> bool:
+        if (
+            skill.scope != "system"
+            or skill.owner_user_id != SYSTEM_SKILL_OWNER_USER_ID
+        ):
+            return False
+        if not isinstance(skill.source, dict):
+            return False
+
+        managed_by = skill.source.get("managed_by")
+        if managed_by == INIT_DATA_MANAGER:
+            return True
+
+        kind = skill.source.get("kind")
+        asset_dir = skill.source.get("asset_dir")
+        return (
+            kind == "system"
+            and isinstance(asset_dir, str)
+            and asset_dir.startswith("skills/")
+        )
+
+    @staticmethod
+    def _extract_storage_prefix(skill: Skill) -> str | None:
+        if not isinstance(skill.entry, dict):
+            return None
+
+        raw_key = skill.entry.get("s3_key")
+        if not isinstance(raw_key, str) or not raw_key.strip():
+            return None
+
+        if skill.entry.get("is_prefix") is True:
+            return raw_key
+
+        return raw_key.rsplit("/", 1)[0] if "/" in raw_key else raw_key
 
     @staticmethod
     def _compute_asset_hash(asset_dir: Path) -> str:
