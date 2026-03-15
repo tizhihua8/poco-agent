@@ -3,7 +3,7 @@
 This service is used to:
 
 - Start tasks, continue conversations, and answer AskQuestion/Plan Approval requests through IM platforms (currently Telegram / DingTalk)
-- Send notifications by polling the Backend public API (completed / failed / input required)
+- Receive Backend push events and send IM notifications (completed / failed / input required)
 
 Design goals:
 
@@ -29,13 +29,7 @@ BACKEND_URL=http://localhost:8000
 BACKEND_USER_ID=default
 FRONTEND_PUBLIC_URL=http://localhost:3000
 FRONTEND_DEFAULT_LANG=zh
-
-# Polling
-POLL_USER_INPUT_INTERVAL_SECONDS=2
-POLL_SESSION_MESSAGES_INTERVAL_SECONDS=2
-POLL_SESSIONS_RECENT_INTERVAL_SECONDS=5
-POLL_SESSIONS_FULL_INTERVAL_SECONDS=300
-POLL_HTTP_TIMEOUT_SECONDS=10
+BACKEND_EVENT_TOKEN=change-this-token
 
 # Telegram
 TELEGRAM_BOT_TOKEN=123:abc
@@ -61,6 +55,10 @@ DINGTALK_WEBHOOK_URL=
 
 - Telegram: `POST /api/v1/webhooks/telegram`
 - DingTalk (optional in Webhook mode): `POST /api/v1/webhooks/dingtalk` (no public callback is needed when using Stream mode)
+- Backend internal events: `POST /api/v1/internal/backend-events`
+
+To enable notifications, configure the Backend to dispatch IM events to this endpoint and
+use the same `BACKEND_EVENT_TOKEN`.
 
 ### IM Commands
 
