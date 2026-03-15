@@ -12,6 +12,7 @@ from pathlib import Path, PurePosixPath
 
 
 _VISIBLE_SKILL_ROOT = PurePosixPath("/.config/skills")
+_VISIBLE_DRAFT_ROOT = PurePosixPath("/skills")
 
 
 def _get_env_value(*keys: str) -> str:
@@ -151,6 +152,31 @@ def _is_under(path: str, root: PurePosixPath) -> bool:
     return PurePosixPath(path).is_relative_to(root)
 
 
+def _prefer_visible_workspace_draft(
+    *,
+    workspace_root: Path,
+    normalized_folder_path: str,
+    source_dir: Path,
+) -> tuple[str, Path]:
+    if not _is_under(normalized_folder_path, _VISIBLE_SKILL_ROOT):
+        return normalized_folder_path, source_dir
+
+    skill_name = source_dir.name
+    visible_draft_path = (_VISIBLE_DRAFT_ROOT / skill_name).as_posix()
+    visible_draft_dir = _resolve_workspace_dir(workspace_root, visible_draft_path)
+    if not visible_draft_dir.is_dir():
+        return normalized_folder_path, source_dir
+    if not (visible_draft_dir / "SKILL.md").is_file():
+        return normalized_folder_path, source_dir
+
+    print(
+        "Using visible workspace draft "
+        f"{visible_draft_path.lstrip('/')} instead of {normalized_folder_path.lstrip('/')}.",
+        file=sys.stderr,
+    )
+    return visible_draft_path, visible_draft_dir
+
+
 def _copy_to_visible_skill_root(
     *,
     workspace_root: Path,
@@ -204,6 +230,12 @@ def _prepare_submission_folder(folder_path: str) -> str:
     if not (source_dir / "SKILL.md").is_file():
         raise RuntimeError(f"Skill folder is missing SKILL.md: {normalized_folder_path}")
 
+    normalized_folder_path, source_dir = _prefer_visible_workspace_draft(
+        workspace_root=workspace_root,
+        normalized_folder_path=normalized_folder_path,
+        source_dir=source_dir,
+    )
+
     if _is_under(normalized_folder_path, _VISIBLE_SKILL_ROOT):
         return normalized_folder_path
 
@@ -225,7 +257,7 @@ def main() -> int:
             "Skill folder path relative to the workspace, an absolute path under "
             "/workspace, or an external local folder. Non-.config skill folders "
             "are copied into .config/skills/<name> automatically for review. "
-            "Recommended authoring path: /workspace/<skill-name>."
+            "Recommended authoring path: /workspace/skills/<skill-name>."
         ),
     )
     parser.add_argument(

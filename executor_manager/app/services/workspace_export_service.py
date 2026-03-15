@@ -21,6 +21,7 @@ workspace_manager = WorkspaceManager()
 storage_service = S3StorageService()
 _ALLOWED_HIDDEN_SKILL_ROOTS = frozenset({".config", ".config_data"})
 _SKILL_VISIBLE_ROOT = PurePosixPath("/.config/skills")
+_VISIBLE_DRAFT_ROOT = PurePosixPath("/skills")
 
 
 class WorkspaceExportService:
@@ -154,6 +155,12 @@ class WorkspaceExportService:
                 error_code=ErrorCode.BAD_REQUEST,
                 message="Skill folder must contain SKILL.md",
             )
+
+        normalized_folder_path, source_dir = self._prefer_visible_workspace_draft(
+            workspace_dir=workspace_dir,
+            normalized_folder_path=normalized_folder_path,
+            source_dir=source_dir,
+        )
 
         if self._is_visible_skill_folder(normalized_folder_path):
             return normalized_folder_path
@@ -389,6 +396,28 @@ class WorkspaceExportService:
     def _is_visible_skill_folder(path: str) -> bool:
         parts = PurePosixPath(path).parts
         return len(parts) == 4 and parts[1] == ".config" and parts[2] == "skills"
+
+    @staticmethod
+    def _prefer_visible_workspace_draft(
+        *,
+        workspace_dir: Path,
+        normalized_folder_path: str,
+        source_dir: Path,
+    ) -> tuple[str, Path]:
+        if not WorkspaceExportService._is_visible_skill_folder(normalized_folder_path):
+            return normalized_folder_path, source_dir
+
+        skill_name = source_dir.name
+        visible_draft_path = (_VISIBLE_DRAFT_ROOT / skill_name).as_posix()
+        visible_draft_dir = WorkspaceExportService._resolve_workspace_dir(
+            workspace_dir=workspace_dir,
+            relative_path=visible_draft_path,
+        )
+        if not visible_draft_dir.is_dir():
+            return normalized_folder_path, source_dir
+        if not (visible_draft_dir / "SKILL.md").is_file():
+            return normalized_folder_path, source_dir
+        return visible_draft_path, visible_draft_dir
 
     @staticmethod
     def _is_allowed_hidden_skill_path(path: Path, workspace_dir: Path) -> bool:

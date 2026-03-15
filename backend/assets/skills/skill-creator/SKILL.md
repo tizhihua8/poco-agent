@@ -40,35 +40,38 @@ Once the skill files are ready in the workspace and the user wants to keep them,
 skill for review with:
 
 ```bash
-python ~/.claude/skills/skill-creator/scripts/upload_skill.py --folder .config/skills/<skill-name>
+python ~/.claude/skills/skill-creator/scripts/upload_skill.py --folder /workspace/skills/<skill-name>
 ```
 
-When creating or editing the draft, treat `.config/skills/<skill-name>` as a path inside the
-workspace. If you need an absolute path for shell commands, use `/workspace/.config/skills/<skill-name>`.
-Do not write to the host-root path `/.config/...`.
+Create and edit the draft in the user-visible workspace folder `/workspace/skills/<skill-name>`
+(or `skills/<skill-name>` when your cwd is `/workspace`). Do not use `/.config/...` or
+`/workspace/.config/...` as the authoring location.
 
-For authoring, the skill folder may also live elsewhere, such as `/workspace/<skill-name>`,
-`/workspace/.claude/skills/<skill-name>`, or even `/tmp/<skill-name>`. The upload script will copy
-that folder into the review namespace at `.config/skills/<skill-name>` before submitting it.
+The hidden `.config/skills/...` path is only a review-staging location managed by the upload flow.
+The hidden `.claude/skills/...` path is only for optional local testing/discovery. The user-visible
+workspace copy under `/workspace/skills/...` should remain the source of truth.
 
 Recommended local workflow in Poco:
 
 1. Create the editable source folder in a user-visible workspace location, preferably
-   `/workspace/<skill-name>` (or `./<skill-name>`).
+   `/workspace/skills/<skill-name>` (or `skills/<skill-name>`).
 2. If you need Claude Code to discover the skill during local testing, create a project-skill
-   symlink at `/workspace/.claude/skills/<skill-name>` pointing to that visible folder.
+   symlink at `/workspace/.claude/skills/<skill-name>` pointing to
+   `/workspace/skills/<skill-name>`.
 3. Keep editing the visible workspace folder as the source of truth so the user can inspect it in
    the file tree.
-4. When submitting for review, call `upload_skill.py --folder /workspace/<skill-name>` (or the
-   equivalent workspace-relative path). The script will stage a review copy under
+4. When submitting for review, call `upload_skill.py --folder /workspace/skills/<skill-name>` (or
+   the equivalent workspace-relative path). The script will stage a review copy under
    `.config/skills/<skill-name>` automatically.
+
+If you accidentally pass `.config/skills/<skill-name>` to the upload flow, Poco will try to detect
+the matching visible draft at `/workspace/skills/<skill-name>` and prefer that copy automatically.
 
 Only submit the finished skill folder itself. Do not submit `.claude`, `.claude_data`, or other
 runtime directories wholesale. If the draft currently lives under a hidden runtime path such as
-`/.claude/skills/<skill-name>` or `/.claude_data/skills/<skill-name>`, first make a review copy in
-the workspace at `.config/skills/<skill-name>` and submit that copy. The `upload_skill.py` script
-handles this copy step automatically when you point it at one of the supported hidden runtime skill
-folders.
+`/.claude/skills/<skill-name>` or `/.claude_data/skills/<skill-name>`, first copy or link it back
+to `/workspace/skills/<skill-name>` so the user can see it, then submit from the visible workspace
+folder. The `upload_skill.py` script will create the hidden review copy automatically.
 
 Use `--name <override-name>` if the final installed skill name should differ from the folder
 name. The script submits a pending review request; after it succeeds, tell the user to confirm
