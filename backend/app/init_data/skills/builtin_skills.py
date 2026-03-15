@@ -269,10 +269,7 @@ class SkillBootstrapService:
 
     @staticmethod
     def _is_managed_builtin_skill(skill: Skill) -> bool:
-        if (
-            skill.scope != "system"
-            or skill.owner_user_id != SYSTEM_SKILL_OWNER_USER_ID
-        ):
+        if skill.scope != "system" or skill.owner_user_id != SYSTEM_SKILL_OWNER_USER_ID:
             return False
         if not isinstance(skill.source, dict):
             return False

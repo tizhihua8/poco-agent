@@ -21,7 +21,10 @@ interface PackageSkillDialogProps {
   folder: FileNode | null;
   submitting?: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (payload: { folder_path: string; skill_name?: string }) => Promise<void>;
+  onConfirm: (payload: {
+    folder_path: string;
+    skill_name?: string;
+  }) => Promise<void>;
 }
 
 function defaultSkillName(folder: FileNode | null): string {

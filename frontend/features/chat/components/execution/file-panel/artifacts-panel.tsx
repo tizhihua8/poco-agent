@@ -53,7 +53,9 @@ export function ArtifactsPanel({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
   const [isExpandedPreviewOpen, setIsExpandedPreviewOpen] =
     React.useState(false);
-  const [packageTarget, setPackageTarget] = React.useState<FileNode | null>(null);
+  const [packageTarget, setPackageTarget] = React.useState<FileNode | null>(
+    null,
+  );
   const [isSubmittingSkill, setIsSubmittingSkill] = React.useState(false);
   const {
     files,
@@ -158,7 +160,10 @@ export function ArtifactsPanel({
         }
 
         if (!sessionId) return;
-        const response = await chatService.getFolderArchive(sessionId, node.path);
+        const response = await chatService.getFolderArchive(
+          sessionId,
+          node.path,
+        );
         if (!response.url) {
           toast.error(t("fileSidebar.archiveNotAvailable"));
           return;

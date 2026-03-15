@@ -172,8 +172,7 @@ def update_yaml_front_matter(
         front_matter[key] = value
 
     rendered_front_matter = [
-        f"{key}: {_render_yaml_scalar(value)}"
-        for key, value in front_matter.items()
+        f"{key}: {_render_yaml_scalar(value)}" for key, value in front_matter.items()
     ]
     rebuilt = [
         _FRONT_MATTER_DELIM,

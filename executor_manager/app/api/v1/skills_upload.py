@@ -44,7 +44,9 @@ async def _prepare_and_export_skill_folder(
         )
     workspace_files_prefix = (result.workspace_files_prefix or "").strip()
     if not workspace_files_prefix:
-        raise HTTPException(status_code=400, detail="Skill folder export is missing files")
+        raise HTTPException(
+            status_code=400, detail="Skill folder export is missing files"
+        )
     return staged_folder_path, workspace_files_prefix
 
 

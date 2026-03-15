@@ -271,8 +271,10 @@ class SkillWorkspaceService:
         workspace_files_prefix: str | None = None,
     ) -> str:
         workspace_prefix = (
-            workspace_files_prefix or session.workspace_files_prefix or ""
-        ).strip().rstrip("/")
+            (workspace_files_prefix or session.workspace_files_prefix or "")
+            .strip()
+            .rstrip("/")
+        )
         if not workspace_prefix:
             raise AppException(
                 error_code=ErrorCode.BAD_REQUEST,

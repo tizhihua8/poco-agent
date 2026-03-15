@@ -92,10 +92,7 @@ class WorkspaceArchiveService:
     @staticmethod
     def _build_archive_key(*, session: AgentSession, folder_path: str) -> str:
         digest = hashlib.sha256(folder_path.encode("utf-8")).hexdigest()[:16]
-        return (
-            f"workspaces/{session.user_id}/{session.id}"
-            f"/folder-archives/{digest}.zip"
-        )
+        return f"workspaces/{session.user_id}/{session.id}/folder-archives/{digest}.zip"
 
     @staticmethod
     def _extract_object_key(file_entry: dict) -> str | None:
@@ -168,9 +165,7 @@ class WorkspaceArchiveService:
 
                     object_key = self._extract_object_key(file_entry)
                     if not object_key:
-                        object_key = (
-                            f"{workspace_prefix}/{normalized_path.lstrip('/')}"
-                        )
+                        object_key = f"{workspace_prefix}/{normalized_path.lstrip('/')}"
 
                     relative_path = PurePosixPath(
                         normalized_path.lstrip("/")

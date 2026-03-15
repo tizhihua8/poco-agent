@@ -6,7 +6,9 @@ import type {
 } from "@/features/chat/types";
 
 export const pendingSkillCreationService = {
-  listPending: async (sessionId?: string | null): Promise<PendingSkillCreation[]> => {
+  listPending: async (
+    sessionId?: string | null,
+  ): Promise<PendingSkillCreation[]> => {
     if (!sessionId) {
       return apiClient.get<PendingSkillCreation[]>(
         API_ENDPOINTS.pendingSkillCreations,
