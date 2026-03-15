@@ -1,7 +1,5 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
-
 import { Badge } from "@/components/ui/badge";
 import { CapabilitySourceAvatar } from "@/features/capabilities/components/capability-source-avatar";
 import type { CapabilityRecommendation } from "@/features/task-composer/types/capability-recommendation";
@@ -15,6 +13,7 @@ interface CapabilityRecommendationsProps {
   showEmptyState: boolean;
   isEnabled: (item: CapabilityRecommendation) => boolean;
   onToggle: (item: CapabilityRecommendation, enabled: boolean) => void;
+  footerMode?: boolean;
 }
 
 function getCapabilityTypeLabel(
@@ -95,6 +94,7 @@ export function CapabilityRecommendations({
   showEmptyState,
   isEnabled,
   onToggle,
+  footerMode = false,
 }: CapabilityRecommendationsProps) {
   const { t } = useT("translation");
   const itemsToRender: CapabilityRecommendation[] = [];
@@ -119,40 +119,24 @@ export function CapabilityRecommendations({
   }
 
   return (
-    <div className="border-t border-border/60 px-4 py-2.5">
-      <div className="space-y-2.5">
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              <Sparkles className="size-3.5" />
-              <span>{t("hero.capabilityRecommendations.title")}</span>
-            </div>
-            {isLoading ? (
-              <span className="text-xs text-muted-foreground">
-                {t("hero.capabilityRecommendations.loading")}
-              </span>
-            ) : null}
-          </div>
-
-          {itemsToRender.length > 0 ? (
-            <div className="grid auto-rows-fr grid-cols-3 gap-2">
-              {itemsToRender.map((item) => (
-                <RecommendationCard
-                  key={`${item.type}:${item.id}`}
-                  item={item}
-                  enabled={isEnabled(item)}
-                  onToggle={onToggle}
-                  t={t}
-                />
-              ))}
-            </div>
-          ) : showEmptyState && !isLoading ? (
-            <div className="rounded-lg border border-dashed border-border/70 bg-muted/10 px-3 py-2 text-sm text-muted-foreground">
-              {t("hero.capabilityRecommendations.empty")}
-            </div>
-          ) : null}
+    <div className={cn(footerMode ? "py-3" : "border-t border-border/60 px-4 py-2.5")}>
+      {itemsToRender.length > 0 ? (
+        <div className="grid auto-rows-fr grid-cols-3 gap-2">
+          {itemsToRender.map((item) => (
+            <RecommendationCard
+              key={`${item.type}:${item.id}`}
+              item={item}
+              enabled={isEnabled(item)}
+              onToggle={onToggle}
+              t={t}
+            />
+          ))}
         </div>
-      </div>
+      ) : showEmptyState && !isLoading ? (
+        <div className="rounded-lg border border-dashed border-border/70 bg-muted/10 px-3 py-2 text-sm text-muted-foreground">
+          {t("hero.capabilityRecommendations.empty")}
+        </div>
+      ) : null}
     </div>
   );
 }

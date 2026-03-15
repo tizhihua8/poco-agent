@@ -169,6 +169,14 @@ export function TaskComposer({
     enabled: !isSubmitting,
     limit: 3,
   });
+  const showRecommendationEmptyState =
+    capabilityRecommendations.hasFetched &&
+    value.trim().length >= capabilityRecommendations.minQueryLength;
+  const showRecommendationsInFooter =
+    capabilityRecommendations.isLoading ||
+    capabilityRecommendations.items.length > 0 ||
+    trackedCapabilityItems.length > 0 ||
+    showRecommendationEmptyState;
 
   // ---- Derived values ----
   const firstLine =
@@ -525,18 +533,6 @@ export function TaskComposer({
           />
         </div>
 
-        <CapabilityRecommendations
-          recommendations={capabilityRecommendations.items}
-          trackedItems={trackedCapabilityItems}
-          isLoading={capabilityRecommendations.isLoading}
-          showEmptyState={
-            capabilityRecommendations.hasFetched &&
-            value.trim().length >= capabilityRecommendations.minQueryLength
-          }
-          isEnabled={isCapabilityEnabled}
-          onToggle={handleToggleCapability}
-        />
-
         {/* Bottom toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 pb-4">
           <div className="flex-1 min-w-0">
@@ -574,6 +570,20 @@ export function TaskComposer({
           <div className="border-t border-border/60">{bottomAddon}</div>
         ) : null}
       </div>
+
+      {showRecommendationsInFooter ? (
+        <div className="mt-3">
+          <CapabilityRecommendations
+            recommendations={capabilityRecommendations.items}
+            trackedItems={trackedCapabilityItems}
+            isLoading={capabilityRecommendations.isLoading}
+            showEmptyState={showRecommendationEmptyState}
+            isEnabled={isCapabilityEnabled}
+            onToggle={handleToggleCapability}
+            footerMode
+          />
+        </div>
+      ) : null}
 
       {fileDrop.isDragActive ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
