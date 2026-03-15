@@ -114,14 +114,17 @@ export function SkillsGrid({
             renderItem={(skill) => {
               const install = installBySkillId.get(skill.id);
               const isBuiltin = skill.scope === "system";
-              const isInstalled = Boolean(install);
+              const hasInstall = Boolean(install);
+              const isInstalled = hasInstall || isBuiltin;
               const isRowLoading =
                 isLoading ||
                 loadingId === skill.id ||
                 loadingId === install?.id;
               const isEnabled = install?.enabled ?? false;
               const avatarStatus =
-                enabledCount > SKILL_LIMIT && isEnabled
+                isBuiltin
+                  ? "active"
+                  : enabledCount > SKILL_LIMIT && isEnabled
                   ? "error"
                   : isEnabled
                     ? "active"
