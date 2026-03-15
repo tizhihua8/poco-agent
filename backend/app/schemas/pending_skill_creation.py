@@ -23,6 +23,7 @@ class PendingSkillCreationResponse(BaseModel):
 
 class PendingSkillCreationConfirmRequest(BaseModel):
     resolved_name: str | None = None
+    description: str | None = Field(default=None, max_length=1000)
     overwrite: bool = False
 
 

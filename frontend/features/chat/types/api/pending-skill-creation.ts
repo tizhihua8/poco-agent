@@ -24,6 +24,7 @@ export interface PendingSkillCreation {
 
 export interface PendingSkillCreationConfirmInput {
   resolved_name?: string | null;
+  description?: string | null;
   overwrite?: boolean;
 }
 

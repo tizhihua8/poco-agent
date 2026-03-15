@@ -12,7 +12,10 @@ from app.models.user_skill_install import UserSkillInstall
 from app.repositories.skill_repository import SkillRepository
 from app.repositories.user_skill_install_repository import UserSkillInstallRepository
 from app.services.storage_service import S3StorageService
-from app.utils.markdown_front_matter import parse_yaml_front_matter
+from app.utils.markdown_front_matter import (
+    parse_yaml_front_matter,
+    update_yaml_front_matter,
+)
 from app.utils.workspace_manifest import (
     extract_manifest_files,
     normalize_manifest_path,
@@ -75,6 +78,7 @@ class SkillWorkspaceService:
         session: AgentSession,
         folder_path: str,
         skill_name: str | None = None,
+        description: str | None = None,
         overwrite: bool = False,
         pending_creation_id: uuid.UUID | None = None,
     ) -> WorkspaceSkillCreateResult:
@@ -83,6 +87,8 @@ class SkillWorkspaceService:
             folder_path=folder_path,
             skill_name=skill_name,
         )
+        if description is not None:
+            info.description = self._normalize_description(description)
         existing_skill = SkillRepository.get_by_name(db, info.detected_name, user_id)
         if existing_skill is not None and not overwrite:
             raise AppException(
@@ -103,6 +109,11 @@ class SkillWorkspaceService:
                 error_code=ErrorCode.BAD_REQUEST,
                 message="No skill files found to create",
             )
+        self._rewrite_skill_markdown(
+            destination_prefix=destination_prefix,
+            skill_name=info.detected_name,
+            description=info.description,
+        )
 
         source: dict[str, str] = {
             "kind": "skill-creator",
@@ -256,3 +267,26 @@ class SkillWorkspaceService:
         if self.storage_service is None:
             self.storage_service = S3StorageService()
         return self.storage_service
+
+    def _rewrite_skill_markdown(
+        self,
+        *,
+        destination_prefix: str,
+        skill_name: str,
+        description: str | None,
+    ) -> None:
+        skill_markdown_key = f"{destination_prefix}/SKILL.md"
+        storage_service = self._storage_service()
+        markdown = storage_service.get_text(skill_markdown_key)
+        updated_markdown = update_yaml_front_matter(
+            markdown,
+            {
+                "name": skill_name,
+                "description": description,
+            },
+        )
+        storage_service.put_object(
+            key=skill_markdown_key,
+            body=updated_markdown.encode("utf-8"),
+            content_type="text/markdown; charset=utf-8",
+        )

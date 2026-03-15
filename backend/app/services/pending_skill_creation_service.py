@@ -137,6 +137,16 @@ class PendingSkillCreationService:
             skill_relative_path=info.folder_path,
         )
         if existing is not None:
+            existing.detected_name = info.detected_name
+            existing.description = info.description
+            existing.workspace_files_prefix = session.workspace_files_prefix
+            if existing.status != "creating":
+                existing.status = "pending"
+                existing.resolved_name = None
+                existing.skill_id = None
+                existing.error = None
+                existing.result = None
+            db.flush()
             return existing
 
         pending = PendingSkillCreation(
@@ -200,6 +210,7 @@ class PendingSkillCreationService:
                 session=session,
                 folder_path=pending.skill_relative_path,
                 skill_name=final_name,
+                description=request.description,
                 overwrite=request.overwrite,
                 pending_creation_id=pending.id,
             )

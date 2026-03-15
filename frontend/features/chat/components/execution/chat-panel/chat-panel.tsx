@@ -1188,7 +1188,8 @@ export function ChatPanel({
         onOpenChange={() => undefined}
       >
         <DialogContent
-          className="max-h-[90vh] w-[min(1200px,calc(100vw-2rem))] max-w-[min(1200px,calc(100vw-2rem))] overflow-hidden p-0"
+          className="max-h-[90vh]   w-[calc(100vw-2rem)] sm:max-w-[90vw]
+ lg:max-w-[960px] xl:max-w-[1000px overflow-hidden p-0"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">

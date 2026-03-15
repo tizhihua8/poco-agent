@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bot, FileCode2, Loader2, Sparkles, TriangleAlert } from "lucide-react";
+import { Bot, Loader2, Sparkles, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -9,12 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import { useT } from "@/lib/i18n/client";
 import { cn } from "@/lib/utils";
 import { getFilesAction } from "@/features/chat/actions/query-actions";
 import { FileSidebar } from "@/features/chat/components/execution/file-panel/file-sidebar";
-import { DocumentViewer } from "@/features/chat/components/execution/file-panel/document-viewer";
 import { skillsService } from "@/features/capabilities/skills/api/skills-api";
 import type { FileNode, PendingSkillCreation } from "@/features/chat/types";
 
@@ -77,6 +76,7 @@ interface SkillCreationReviewCardProps {
   className?: string;
   onConfirm: (payload: {
     resolved_name?: string | null;
+    description?: string | null;
     overwrite?: boolean;
   }) => Promise<unknown>;
   onCancel: () => Promise<unknown>;
@@ -94,6 +94,9 @@ export function SkillCreationReviewCard({
     creation.resolved_name || creation.detected_name,
   );
   const [overwrite, setOverwrite] = React.useState(false);
+  const [description, setDescription] = React.useState(
+    creation.description || "",
+  );
   const [files, setFiles] = React.useState<FileNode[]>([]);
   const [selectedFile, setSelectedFile] = React.useState<FileNode>();
   const [isLoadingFiles, setIsLoadingFiles] = React.useState(false);
@@ -101,8 +104,14 @@ export function SkillCreationReviewCard({
 
   React.useEffect(() => {
     setResolvedName(creation.resolved_name || creation.detected_name);
+    setDescription(creation.description || "");
     setOverwrite(false);
-  }, [creation.detected_name, creation.id, creation.resolved_name]);
+  }, [
+    creation.description,
+    creation.detected_name,
+    creation.id,
+    creation.resolved_name,
+  ]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -155,7 +164,9 @@ export function SkillCreationReviewCard({
         setConflict(
           Boolean(
             normalized &&
-              skills.some((skill) => skill.name.trim().toLowerCase() === normalized),
+            skills.some(
+              (skill) => skill.name.trim().toLowerCase() === normalized,
+            ),
           ),
         );
       } catch {
@@ -175,6 +186,7 @@ export function SkillCreationReviewCard({
     try {
       await onConfirm({
         resolved_name: resolvedName.trim() || undefined,
+        description: description.trim(),
         overwrite,
       });
       toast.success(t("chat.skillCreationReview.createSuccess"));
@@ -197,7 +209,7 @@ export function SkillCreationReviewCard({
   return (
     <div
       className={cn(
-        "rounded-lg border border-border bg-card/70 p-4 shadow-sm",
+        "flex h-[60vh] max-h-[80vh] flex-col overflow-hidden rounded-lg border border-border bg-card/70 p-4 shadow-sm",
         className,
       )}
     >
@@ -231,8 +243,8 @@ export function SkillCreationReviewCard({
         ) : null}
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
-        <div className="space-y-4">
+      <div className="mt-4 grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(440px,0.8fr)]">
+        <div className="min-h-0 space-y-4 overflow-y-auto pr-1">
           <div className="space-y-2">
             <Label htmlFor={`skill-creation-name-${creation.id}`}>
               {t("chat.skillCreationReview.nameLabel")}
@@ -250,10 +262,13 @@ export function SkillCreationReviewCard({
             <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {t("chat.skillCreationReview.descriptionLabel")}
             </div>
-            <div className="rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-sm text-foreground">
-              {creation.description?.trim() ||
-                t("chat.skillCreationReview.emptyDescription")}
-            </div>
+            <Textarea
+              value={description}
+              disabled={isSubmitting}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder={t("chat.skillCreationReview.emptyDescription")}
+              className="min-h-28 resize-y"
+            />
           </div>
 
           <div className="space-y-2">
@@ -276,7 +291,9 @@ export function SkillCreationReviewCard({
                       id={`skill-creation-overwrite-${creation.id}`}
                       checked={overwrite}
                       disabled={isSubmitting}
-                      onCheckedChange={(checked) => setOverwrite(checked === true)}
+                      onCheckedChange={(checked) =>
+                        setOverwrite(checked === true)
+                      }
                     />
                     <Label
                       htmlFor={`skill-creation-overwrite-${creation.id}`}
@@ -291,45 +308,23 @@ export function SkillCreationReviewCard({
           ) : null}
         </div>
 
-        <div className="min-h-[280px] overflow-hidden rounded-lg border border-border/60 bg-background">
-          <div className="flex items-center gap-2 border-b border-border/60 px-3 py-2 text-sm text-muted-foreground">
-            <FileCode2 className="size-4" />
-            {t("chat.skillCreationReview.filesTitle")}
-          </div>
+        <div className="min-h-0 overflow-hidden rounded-lg border border-border/60 bg-background">
           {isLoadingFiles ? (
-            <div className="flex h-[320px] items-center justify-center text-sm text-muted-foreground">
+            <div className="flex h-full min-h-[320px] items-center justify-center text-sm text-muted-foreground">
               <Loader2 className="mr-2 size-4 animate-spin" />
               {t("chat.skillCreationReview.loadingFiles")}
             </div>
           ) : files.length === 0 ? (
-            <div className="flex h-[320px] items-center justify-center px-4 text-center text-sm text-muted-foreground">
+            <div className="flex h-full min-h-[320px] items-center justify-center px-4 text-center text-sm text-muted-foreground">
               {t("chat.skillCreationReview.emptyFiles")}
             </div>
           ) : (
-            <div className="grid h-[320px] min-h-0 grid-cols-[minmax(220px,32%)_minmax(0,68%)] overflow-hidden">
-              <div className="border-r border-border/60 bg-muted/20">
-                <ScrollArea className="h-full">
-                  <FileSidebar
-                    files={files}
-                    onFileSelect={setSelectedFile}
-                    selectedFile={selectedFile}
-                    embedded
-                  />
-                </ScrollArea>
-              </div>
-              <div className="min-w-0 overflow-hidden">
-                {selectedFile ? (
-                  <DocumentViewer
-                    file={selectedFile}
-                    ensureFreshFile={async (file) => file}
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center px-4 text-center text-sm text-muted-foreground">
-                    {t("chat.skillCreationReview.selectFile")}
-                  </div>
-                )}
-              </div>
-            </div>
+            <FileSidebar
+              files={files}
+              onFileSelect={setSelectedFile}
+              selectedFile={selectedFile}
+              embedded
+            />
           )}
         </div>
       </div>
