@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   ArrowUpRight,
+  CalendarDays,
   Download,
   Github,
   RefreshCw,
@@ -54,8 +55,6 @@ function formatUpdatedAt(value: string | null, locale: string): string | null {
       year: "numeric",
       month: "short",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     }).format(date);
   } catch {
     return date.toLocaleDateString();
@@ -94,24 +93,22 @@ function SkillMarketplaceCard({
 
   return (
     <article className="group overflow-hidden rounded-[1.35rem] border border-border/60 bg-gradient-to-b from-background via-background to-muted/20 shadow-[var(--shadow-sm)] transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:shadow-[var(--shadow-md)]">
-      <div className="space-y-4 px-5 py-5">
-        <div className="space-y-2">
-          <div className="flex items-start justify-between gap-3">
-            <h3
-              className="min-w-0 flex-1 truncate text-base font-bold tracking-tight text-foreground"
-              style={{
-                fontFamily: '"Maple Mono", "Maple Mono NF", var(--font-mono)',
-              }}
-            >
-              {item.name}
-            </h3>
-            <div className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300">
-              <Star className="size-3.5 fill-current text-amber-500" />
-              {item.stars.toLocaleString()}
-            </div>
-          </div>
+      <div className="flex items-start justify-between gap-3 bg-muted/50 px-6 py-4">
+        <h3
+          className="min-w-0 flex-1 truncate text-base font-bold tracking-tight text-foreground"
+          style={{
+            fontFamily: '"Maple Mono", "Maple Mono NF", var(--font-mono)',
+          }}
+        >
+          {item.name}
+        </h3>
+        <div className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-amber-500/8 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300">
+          <Star className="size-3.5 fill-current text-amber-500" />
+          {item.stars.toLocaleString()}
         </div>
+      </div>
 
+      <div className="space-y-4 px-5 py-2">
         <p className="line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-muted-foreground">
           {item.description ||
             t("library.skillsImport.marketplace.noDescription")}
@@ -133,8 +130,9 @@ function SkillMarketplaceCard({
             <span />
           )}
           {updatedAt ? (
-            <div className="shrink-0">
-              {t("library.skillsImport.marketplace.updatedAt")} · {updatedAt}
+            <div className="inline-flex shrink-0 items-center gap-1.5">
+              <CalendarDays className="size-3.5" />
+              {updatedAt}
             </div>
           ) : null}
         </div>
@@ -180,6 +178,7 @@ export function SkillMarketplaceBrowser({
   downloadingExternalId,
 }: SkillMarketplaceBrowserProps) {
   const { t } = useT("translation");
+  const [isComposingSearch, setIsComposingSearch] = React.useState(false);
 
   const showEmptyState = !isLoading && !errorMessage && items.length === 0;
 
@@ -194,7 +193,16 @@ export function SkillMarketplaceBrowser({
               "library.skillsImport.placeholders.marketplaceSearch",
             )}
             className="w-full md:w-full"
+            onCompositionStart={() => setIsComposingSearch(true)}
+            onCompositionEnd={() => setIsComposingSearch(false)}
             onKeyDown={(event) => {
+              if (
+                isComposingSearch ||
+                event.nativeEvent.isComposing ||
+                event.keyCode === 229
+              ) {
+                return;
+              }
               if (event.key === "Enter") {
                 event.preventDefault();
                 onSearch();
@@ -320,7 +328,7 @@ export function SkillMarketplaceBrowser({
                 <StaggeredList
                   items={section.items}
                   show
-                  className="grid gap-3 sm:grid-cols-2 sm:space-y-0"
+                  className="grid gap-x-6 gap-y-4 sm:grid-cols-2 sm:space-y-0 md:gap-y-8"
                   itemClassName="h-full"
                   keyExtractor={(item) => `${section.key}-${item.external_id}`}
                   renderItem={(item) => (

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 from pathlib import PurePosixPath
 from urllib.parse import quote, urlparse
@@ -103,12 +103,30 @@ class SkillsMpService:
     @classmethod
     def _coerce_datetime(cls, value: object) -> datetime | None:
         cleaned = cls._clean_text(value)
-        if not cleaned:
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            timestamp = float(value)
+        else:
+            if not cleaned:
+                return None
+
+            try:
+                timestamp = float(cleaned)
+            except ValueError:
+                normalized = cleaned.replace("Z", "+00:00")
+                try:
+                    return datetime.fromisoformat(normalized)
+                except ValueError:
+                    return None
+
+        if timestamp <= 0:
             return None
-        normalized = cleaned.replace("Z", "+00:00")
+
+        if timestamp > 1_000_000_000_000:
+            timestamp /= 1000
+
         try:
-            return datetime.fromisoformat(normalized)
-        except ValueError:
+            return datetime.fromtimestamp(timestamp, tz=timezone.utc)
+        except (OverflowError, OSError, ValueError):
             return None
 
     @staticmethod
