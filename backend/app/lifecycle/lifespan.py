@@ -1,32 +1,31 @@
-import logging
 import asyncio
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from starlette.concurrency import run_in_threadpool
 
 from app.core.database import engine
-from app.services.im_event_dispatcher import ImEventDispatcher
 from app.core.settings import get_settings
 from app.im.services.dingtalk_stream_service import DingTalkStreamService
 from app.im.services.feishu_stream_service import FeishuStreamService
+from app.lifecycle.bootstrap import LifecycleBootstrapService
+from app.services.im_event_dispatcher import ImEventDispatcher
 
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan management for database connections."""
+    """Manage application startup and shutdown tasks."""
     _ = app
     logger.info("Starting application...")
     logger.info("Database engine initialized")
 
     settings = get_settings()
     if settings.bootstrap_on_startup:
-        from app.init_data.bootstrap import DataBootstrapService
-
-        await run_in_threadpool(DataBootstrapService.bootstrap_all)
-        logger.info("Built-in data bootstrap completed")
+        await run_in_threadpool(LifecycleBootstrapService.bootstrap_all)
+        logger.info("Lifecycle bootstrap completed")
 
     dispatcher = ImEventDispatcher()
     dingtalk_stream = DingTalkStreamService()

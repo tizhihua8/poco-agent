@@ -13,8 +13,8 @@ from app.utils.markdown_front_matter import parse_yaml_front_matter
 logger = logging.getLogger(__name__)
 
 SYSTEM_SKILL_OWNER_USER_ID = "__system__"
-INIT_DATA_MANAGER = "init_data"
-_BACKEND_ROOT = Path(__file__).resolve().parents[3]
+LIFECYCLE_MANAGER = "lifecycle"
+_BACKEND_ROOT = Path(__file__).resolve().parents[2]
 _BUILTIN_SKILL_ASSETS_ROOT = _BACKEND_ROOT / "assets" / "skills"
 
 
@@ -181,7 +181,7 @@ class SkillBootstrapService:
         version = cls._compute_asset_hash(definition.asset_dir)
         source: dict[str, object] = {
             "kind": "system",
-            "managed_by": INIT_DATA_MANAGER,
+            "managed_by": LIFECYCLE_MANAGER,
             "version": version,
             "asset_dir": f"skills/{definition.asset_dir_name}",
         }
@@ -275,7 +275,7 @@ class SkillBootstrapService:
             return False
 
         managed_by = skill.source.get("managed_by")
-        if managed_by == INIT_DATA_MANAGER:
+        if managed_by == LIFECYCLE_MANAGER:
             return True
 
         kind = skill.source.get("kind")
