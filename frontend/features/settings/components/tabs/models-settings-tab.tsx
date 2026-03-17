@@ -352,16 +352,7 @@ export function ModelsSettingsTab({
   }, [activeProviderId, providers]);
 
   return (
-    <div className="flex-1 space-y-8 overflow-y-auto p-6">
-      <section className="space-y-2">
-        <h3 className="text-sm font-medium text-foreground">
-          {t("settings.modelConfigTitle")}
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          {t("settings.providerConfigDescription")}
-        </p>
-      </section>
-
+    <div className="flex-1 space-y-6 overflow-y-auto p-6">
       <section className="space-y-4">
         {isLoading ? (
           <div className="rounded-3xl border border-border/60 bg-card/60 p-5 text-sm text-muted-foreground">
