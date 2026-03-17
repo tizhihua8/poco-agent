@@ -67,8 +67,7 @@ export function SkillsGrid({
   const [collapsedGroupKeys, setCollapsedGroupKeys] = React.useState<
     Set<string>
   >(() => new Set());
-  const actionIconClass =
-    "rounded-lg transition-opacity md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto";
+  const actionIconClass = "rounded-lg transition-opacity";
 
   const installBySkillId = React.useMemo(() => {
     const map = new Map<number, UserSkillInstall>();
@@ -196,7 +195,8 @@ export function SkillsGrid({
     [customSkillGroups, marketSkillGroups, systemSkillGroups],
   );
 
-  const renderSkillRow = (skill: Skill, key?: React.Key) => {
+  function SkillRow({ skill }: { skill: Skill }) {
+    const [isHovered, setIsHovered] = React.useState(false);
     const install = installBySkillId.get(skill.id);
     const isBuiltin = skill.scope === "system";
     const isAgentCreated =
@@ -211,95 +211,116 @@ export function SkillsGrid({
     const isInstalled = hasInstall || isBuiltin;
     const isRowLoading =
       isLoading || loadingId === skill.id || loadingId === install?.id;
+    const showDeleteAction = isHovered;
 
     return (
-      <div
-        key={key}
-        className={`group flex min-h-[64px] items-center rounded-xl border px-4 py-3 ${
-          isInstalled
-            ? "border-border/70 bg-card"
-            : "border-border/40 bg-muted/20"
-        }`}
-      >
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => onOpenSkillSettings?.(skill)}
-              disabled={!onOpenSkillSettings}
-              className={cn(
-                "max-w-full truncate text-left font-medium underline underline-offset-4 decoration-transparent transition-[color,text-decoration-color] duration-300 ease-out",
-                onOpenSkillSettings
-                  ? "cursor-pointer hover:decoration-muted-foreground/30"
-                  : "cursor-default",
-              )}
-            >
-              {skill.name}
-            </button>
-            <Badge variant="outline" className="text-xs text-muted-foreground">
-              {categoryLabel}
-            </Badge>
-            {isAgentCreated && (
-              <Badge variant="secondary" className="text-xs">
-                {t("library.skillsManager.source.skillCreator")}
+      <div className="min-h-[64px]">
+        <div
+          className={`flex min-h-[64px] items-center rounded-xl border px-4 py-3 ${
+            isInstalled
+              ? "border-border/70 bg-card"
+              : "border-border/40 bg-muted/20"
+          }`}
+          onPointerEnter={() => setIsHovered(true)}
+          onPointerLeave={() => setIsHovered(false)}
+        >
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onOpenSkillSettings?.(skill)}
+                disabled={!onOpenSkillSettings}
+                className={cn(
+                  "max-w-full truncate text-left font-medium underline underline-offset-4 decoration-transparent transition-[color,text-decoration-color] duration-300 ease-out",
+                  onOpenSkillSettings
+                    ? "cursor-pointer hover:decoration-muted-foreground/30"
+                    : "cursor-default",
+                )}
+              >
+                {skill.name}
+              </button>
+              <Badge
+                variant="outline"
+                className="text-xs text-muted-foreground"
+              >
+                {categoryLabel}
               </Badge>
-            )}
+              {isAgentCreated && (
+                <Badge variant="secondary" className="text-xs">
+                  {t("library.skillsManager.source.skillCreator")}
+                </Badge>
+              )}
+            </div>
+            {skill.description ? (
+              <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                {skill.description}
+              </p>
+            ) : null}
           </div>
-          {skill.description ? (
-            <p className="mt-0.5 truncate text-xs text-muted-foreground">
-              {skill.description}
-            </p>
-          ) : null}
-        </div>
 
-        {isBuiltin ? null : isInstalled && install ? (
-          <div className="flex items-center gap-2">
-            {skill.scope === "user" && (
-              <Button
-                variant="ghost"
-                size="icon"
+          {isBuiltin ? null : isInstalled && install ? (
+            <div className="flex items-center gap-2">
+              {skill.scope === "user" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={isRowLoading}
+                  onClick={() => onDeleteSkill?.(skill.id)}
+                  className={cn(
+                    actionIconClass,
+                    showDeleteAction
+                      ? "opacity-100 pointer-events-auto"
+                      : "opacity-0 pointer-events-none",
+                  )}
+                  title={t("common.delete")}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
+              <Switch
+                checked={install.enabled}
                 disabled={isRowLoading}
-                onClick={() => onDeleteSkill?.(skill.id)}
-                className={actionIconClass}
-                title={t("common.delete")}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            )}
-            <Switch
-              checked={install.enabled}
-              disabled={isRowLoading}
-              onCheckedChange={(enabled) =>
-                onToggleEnabled?.(install.id, enabled)
-              }
-            />
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              disabled={isRowLoading}
-              onClick={() => onInstall?.(skill.id)}
-            >
-              {t("library.skillsManager.actions.install")}
-            </Button>
-            {skill.scope === "user" && (
+                onCheckedChange={(enabled) =>
+                  onToggleEnabled?.(install.id, enabled)
+                }
+              />
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
               <Button
-                variant="ghost"
-                size="icon"
+                size="sm"
                 disabled={isRowLoading}
-                onClick={() => onDeleteSkill?.(skill.id)}
-                className={actionIconClass}
-                title={t("common.delete")}
+                onClick={() => onInstall?.(skill.id)}
               >
-                <Trash2 className="size-4" />
+                {t("library.skillsManager.actions.install")}
               </Button>
-            )}
-          </div>
-        )}
+              {skill.scope === "user" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={isRowLoading}
+                  onClick={() => onDeleteSkill?.(skill.id)}
+                  className={cn(
+                    actionIconClass,
+                    showDeleteAction
+                      ? "opacity-100 pointer-events-auto"
+                      : "opacity-0 pointer-events-none",
+                  )}
+                  title={t("common.delete")}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     );
-  };
+  }
+
+  const renderSkillRow = (skill: Skill, key?: React.Key) => (
+    <SkillRow key={key ?? skill.id} skill={skill} />
+  );
 
   const renderSourceTree = (groups: CustomSkillGroup[]) => {
     if (groups.length === 0) {
