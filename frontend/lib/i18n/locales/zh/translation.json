@@ -1648,7 +1648,12 @@
         "clear": "移除自定义 Key",
         "clearError": "刷新 SkillsMP 状态失败"
       }
-    }
+    },
+    "providerApiKeyLinkText": "点击这里获取密钥",
+    "providerModelRemove": "移除模型",
+    "providerModelDocsPrefix": "查看 ",
+    "providerModelDocsLinkLabel": "{{provider}} 文档",
+    "providerModelDocsSuffix": " 获取更多模型"
   },
   "validation": {
     "projectNameRequired": "请输入项目名称",

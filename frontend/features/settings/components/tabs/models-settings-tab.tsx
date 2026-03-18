@@ -1,14 +1,45 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronRight, Plus, RotateCcw, X } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { Plus, Trash2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useT } from "@/lib/i18n/client";
 import type { ApiProviderConfig } from "@/features/settings/types";
+
+type ProviderHelpInfo = {
+  apiKeyUrl: string;
+  modelDocsUrl: string;
+  modelDocsName: string;
+};
+
+const MASKED_API_KEY_VALUE = "*******************";
+
+const PROVIDER_HELP_INFO: Record<string, ProviderHelpInfo> = {
+  minimax: {
+    apiKeyUrl:
+      "https://platform.minimaxi.com/user-center/basic-information/interface-key",
+    modelDocsUrl: "https://platform.minimaxi.com/docs/guides/models-intro",
+    modelDocsName: "MiniMax",
+  },
+  deepseek: {
+    apiKeyUrl: "https://platform.deepseek.com/api_keys",
+    modelDocsUrl: "https://api-docs.deepseek.com/zh-cn/",
+    modelDocsName: "DeepSeek",
+  },
+  glm: {
+    apiKeyUrl: "https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys",
+    modelDocsUrl: "https://open.bigmodel.cn/dev/api/normal-model/glm-4",
+    modelDocsName: "GLM",
+  },
+  anthropic: {
+    apiKeyUrl: "https://platform.claude.com/settings/keys",
+    modelDocsUrl:
+      "https://platform.claude.com/docs/en/docs/about-claude/models",
+    modelDocsName: "Claude",
+  },
+};
 
 function splitModelDraft(value: string): string[] {
   return value
@@ -20,6 +51,7 @@ function splitModelDraft(value: string): string[] {
 interface ProviderModelFieldProps {
   config: ApiProviderConfig;
   inputId: string;
+  providerHelp?: ProviderHelpInfo;
   onChange: (patch: Partial<ApiProviderConfig>) => void;
   onModelChange?: () => void;
 }
@@ -27,6 +59,7 @@ interface ProviderModelFieldProps {
 function ProviderModelField({
   config,
   inputId,
+  providerHelp,
   onChange,
   onModelChange,
 }: ProviderModelFieldProps) {
@@ -85,8 +118,10 @@ function ProviderModelField({
   );
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2">
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <Plus className="size-4 text-muted-foreground" aria-hidden="true" />
+        <span className="sr-only">{t("settings.providerModelsAdd")}</span>
         <Input
           id={inputId}
           value={config.modelDraft}
@@ -94,45 +129,43 @@ function ProviderModelField({
           onKeyDown={handleDraftKeyDown}
           placeholder={t("settings.providerModelsSearchPlaceholder")}
           disabled={config.isSaving}
-          className="h-9"
+          className="h-9 flex-1 min-w-[200px]"
         />
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="size-9 shrink-0"
-          onClick={commitDraft}
-          disabled={config.isSaving || config.modelDraft.trim().length === 0}
-          title={t("settings.providerModelsAdd")}
-          aria-label={t("settings.providerModelsAdd")}
-        >
-          <Plus className="size-3.5" />
-        </Button>
       </div>
+      {providerHelp ? (
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {t("settings.providerModelDocsPrefix")}
+          <a
+            href={providerHelp.modelDocsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary font-medium transition-colors hover:text-primary/80 hover:underline"
+          >
+            {t("settings.providerModelDocsLinkLabel", {
+              provider: providerHelp.modelDocsName,
+            })}
+          </a>
+          {t("settings.providerModelDocsSuffix")}
+        </p>
+      ) : (
+        <span />
+      )}
       {config.selectedModelIds.length > 0 ? (
-        <div className="flex min-w-0 flex-wrap items-center gap-1">
+        <div className="space-y-1 text-sm text-foreground">
           {config.selectedModelIds.map((modelId) => (
-            <span
-              key={modelId}
-              className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs text-foreground"
-            >
-              <span className="max-w-[120px] truncate">{modelId}</span>
-              <span
-                role="button"
-                tabIndex={0}
-                className="text-muted-foreground transition hover:text-foreground"
-                onClick={() => removeModel(modelId)}
-                onKeyDown={(event) => {
-                  if (event.key !== "Enter" && event.key !== " ") {
-                    return;
-                  }
-                  event.preventDefault();
-                  removeModel(modelId);
-                }}
-              >
-                <X className="size-3" />
+            <div key={modelId} className="flex items-center gap-2">
+              <span className="min-w-0 flex-1 truncate font-medium">
+                {modelId}
               </span>
-            </span>
+              <button
+                type="button"
+                className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={t("settings.providerModelRemove")}
+                onClick={() => removeModel(modelId)}
+              >
+                <X className="size-3.5" />
+              </button>
+            </div>
           ))}
         </div>
       ) : null}
@@ -159,7 +192,6 @@ function ApiProviderSection({
   const apiKeyInputId = `${config.providerId}-api-key`;
   const baseUrlInputId = `${config.providerId}-base-url`;
   const modelInputId = `${config.providerId}-model`;
-  const [isEditingKey, setIsEditingKey] = React.useState(false);
   const canClear =
     config.hasStoredUserKey ||
     config.hasStoredUserBaseUrl ||
@@ -173,6 +205,15 @@ function ApiProviderSection({
     () => config.models.map((item) => item.model_id),
     [config.models],
   );
+  const providerHelp = React.useMemo(
+    () => PROVIDER_HELP_INFO[config.providerId],
+    [config.providerId],
+  );
+  const isMaskingKey =
+    config.hasStoredUserKey && config.keyInput.trim().length === 0;
+
+  const isProviderActive =
+    config.enabled && config.hasStoredUserKey && storedModelIds.length > 0;
 
   const hasChanges =
     config.keyInput.trim().length > 0 ||
@@ -186,7 +227,6 @@ function ApiProviderSection({
   const handleBlur = React.useCallback(() => {
     if (hasChanges && !config.isSaving) {
       void onSave();
-      setIsEditingKey(false);
     }
   }, [hasChanges, config.isSaving, onSave]);
 
@@ -205,65 +245,75 @@ function ApiProviderSection({
     [canActivate, onToggleEnabled],
   );
 
-  const handleStartEditKey = React.useCallback(() => {
-    setIsEditingKey(true);
-  }, []);
-
   return (
-    <section className="space-y-3">
-      <div className="flex items-center justify-between border-b border-border/50 pb-2">
-        <h2 className="text-base font-semibold">{config.displayName}</h2>
+    <section className="space-y-4 rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm md:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-3">
+        <h2 className="text-lg font-semibold">{config.displayName}</h2>
         <div className="flex items-center gap-2">
-          {!canActivate && config.enabled && (
-            <span className="text-[10px] text-muted-foreground">
-              {t("settings.providerNeedConfig")}
-            </span>
-          )}
+          {canClear ? (
+            <button
+              type="button"
+              className="rounded-full p-1 text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
+              onClick={() => void onClear()}
+              disabled={config.isSaving}
+              aria-label={t("settings.providerClearCustom")}
+            >
+              <Trash2 className="size-4" />
+            </button>
+          ) : null}
           <Switch
-            checked={config.enabled}
+            checked={isProviderActive}
             onCheckedChange={handleToggleEnabled}
             disabled={!canActivate && !config.enabled}
           />
         </div>
       </div>
-      <div className="grid gap-3">
-        <div className="space-y-1.5">
-          <Label htmlFor={apiKeyInputId} className="text-xs">
+      <div className="grid gap-4">
+        <div className="space-y-2">
+          <Label
+            htmlFor={apiKeyInputId}
+            className="text-sm font-medium text-foreground"
+          >
             {t("settings.providerApiKeyLabel", {
               provider: config.displayName,
             })}
           </Label>
-          {config.hasStoredUserKey && !isEditingKey && !config.keyInput ? (
-            <button
-              type="button"
-              onClick={handleStartEditKey}
-              className="flex h-9 w-full items-center justify-between rounded-md border border-border bg-transparent px-3 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
-              disabled={config.isSaving}
-            >
-              <span className="flex items-center gap-2">
-                <Check className="size-3.5 text-primary" />
-                {t("settings.providerApiKeyConfigured")}
-              </span>
-              <ChevronRight className="size-3.5" />
-            </button>
-          ) : (
-            <Input
-              id={apiKeyInputId}
-              type="password"
-              value={config.keyInput}
-              onChange={(event) => onChange({ keyInput: event.target.value })}
-              onBlur={handleBlur}
-              placeholder={t("settings.providerApiKeyPlaceholder", {
-                provider: config.displayName,
-              })}
-              disabled={config.isSaving}
-              className="h-9"
-            />
-          )}
+          <Input
+            id={apiKeyInputId}
+            type={isMaskingKey ? "text" : "password"}
+            value={isMaskingKey ? MASKED_API_KEY_VALUE : config.keyInput}
+            onFocus={() => {
+              if (isMaskingKey) {
+                onChange({ keyInput: "" });
+              }
+            }}
+            onChange={(event) => onChange({ keyInput: event.target.value })}
+            onBlur={handleBlur}
+            placeholder={t("settings.providerApiKeyPlaceholder", {
+              provider: config.displayName,
+            })}
+            disabled={config.isSaving}
+            className="h-9"
+          />
+          {providerHelp ? (
+            <p className="text-xs text-muted-foreground">
+              <a
+                href={providerHelp.apiKeyUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary transition-colors hover:text-primary/80 hover:underline"
+              >
+                {t("settings.providerApiKeyLinkText")}
+              </a>
+            </p>
+          ) : null}
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor={baseUrlInputId} className="text-xs">
+        <div className="space-y-2">
+          <Label
+            htmlFor={baseUrlInputId}
+            className="text-sm font-medium text-foreground"
+          >
             {t("settings.providerBaseUrlLabel")}
           </Label>
           <Input
@@ -278,9 +328,12 @@ function ApiProviderSection({
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <Label htmlFor={modelInputId} className="text-xs">
+          <Label
+            htmlFor={modelInputId}
+            className="text-sm font-medium text-foreground"
+          >
             {t("settings.sidebar.models")}
           </Label>
           {storedModelIds.length > 0 && (
@@ -292,26 +345,11 @@ function ApiProviderSection({
         <ProviderModelField
           config={config}
           inputId={modelInputId}
+          providerHelp={providerHelp}
           onChange={onChange}
           onModelChange={handleModelChange}
         />
       </div>
-
-      {canClear && (
-        <div className="pt-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => void onClear()}
-            disabled={config.isSaving}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <RotateCcw className="size-3.5" />
-            {t("settings.providerClearCustom")}
-          </Button>
-        </div>
-      )}
     </section>
   );
 }
@@ -368,6 +406,10 @@ export function ModelsSettingsTab({
               <div className="space-y-1">
                 {providers.map((provider) => {
                   const isActive = activeProviderId === provider.providerId;
+                  const providerHasConfig =
+                    provider.hasStoredUserKey && provider.models.length > 0;
+                  const providerIsActive =
+                    provider.enabled && providerHasConfig;
 
                   return (
                     <button
@@ -384,7 +426,7 @@ export function ModelsSettingsTab({
                       <span className="truncate font-medium">
                         {provider.displayName}
                       </span>
-                      {provider.enabled && (
+                      {providerIsActive && (
                         <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
                           ON
                         </span>
@@ -424,6 +466,9 @@ export function ModelsSettingsTab({
           <div className="flex gap-2 overflow-x-auto border-b border-border/50 px-4 py-2 md:hidden">
             {providers.map((provider) => {
               const isActive = activeProviderId === provider.providerId;
+              const providerHasConfig =
+                provider.hasStoredUserKey && provider.models.length > 0;
+              const providerIsActive = provider.enabled && providerHasConfig;
 
               return (
                 <button
@@ -437,7 +482,7 @@ export function ModelsSettingsTab({
                   }`}
                 >
                   <span>{provider.displayName}</span>
-                  {provider.enabled && (
+                  {providerIsActive && (
                     <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
                       ON
                     </span>

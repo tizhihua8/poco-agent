@@ -1544,7 +1544,12 @@
         "clear": "Supprimer la clé personnalisée",
         "clearError": "Impossible d'actualiser le statut SkillsMP"
       }
-    }
+    },
+    "providerApiKeyLinkText": "Get API key here",
+    "providerModelRemove": "Remove model",
+    "providerModelDocsPrefix": "Consulter ",
+    "providerModelDocsLinkLabel": "la documentation {{provider}}",
+    "providerModelDocsSuffix": " pour plus de modèles"
   },
   "validation": {
     "projectNameRequired": "Veuillez entrer un nom de projet",

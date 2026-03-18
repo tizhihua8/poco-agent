@@ -1544,7 +1544,12 @@
         "clear": "Удалить пользовательский ключ",
         "clearError": "Не удалось обновить статус SkillsMP"
       }
-    }
+    },
+    "providerApiKeyLinkText": "Get API key here",
+    "providerModelRemove": "Remove model",
+    "providerModelDocsPrefix": "Откройте ",
+    "providerModelDocsLinkLabel": "документацию {{provider}}",
+    "providerModelDocsSuffix": ", чтобы увидеть больше моделей"
   },
   "validation": {
     "projectNameRequired": "Пожалуйста, введите имя проекта",

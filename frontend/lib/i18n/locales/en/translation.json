@@ -1648,7 +1648,12 @@
         "clear": "Remove custom key",
         "clearError": "Failed to refresh SkillsMP status"
       }
-    }
+    },
+    "providerApiKeyLinkText": "Get API key here",
+    "providerModelRemove": "Remove model",
+    "providerModelDocsPrefix": "View ",
+    "providerModelDocsLinkLabel": "{{provider}} docs",
+    "providerModelDocsSuffix": " for more models"
   },
   "validation": {
     "projectNameRequired": "Please enter a project name",

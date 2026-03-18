@@ -1544,7 +1544,12 @@
         "clear": "カスタムキーを削除",
         "clearError": "SkillsMP 状態の更新に失敗しました"
       }
-    }
+    },
+    "providerApiKeyLinkText": "Get API key here",
+    "providerModelRemove": "Remove model",
+    "providerModelDocsPrefix": "こちらの ",
+    "providerModelDocsLinkLabel": "{{provider}} ドキュメント",
+    "providerModelDocsSuffix": " でモデル一覧を見る"
   },
   "validation": {
     "projectNameRequired": "プロジェクト名を入力してください",

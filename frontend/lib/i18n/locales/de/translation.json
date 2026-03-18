@@ -1548,7 +1548,12 @@
         "clear": "Benutzerdefinierten Schluessel entfernen",
         "clearError": "SkillsMP-Status konnte nicht aktualisiert werden"
       }
-    }
+    },
+    "providerApiKeyLinkText": "Get API key here",
+    "providerModelRemove": "Remove model",
+    "providerModelDocsPrefix": "Sieh dir die ",
+    "providerModelDocsLinkLabel": "{{provider}}-Doku",
+    "providerModelDocsSuffix": " für weitere Modelle an"
   },
   "validation": {
     "projectNameRequired": "Bitte gib einen Projektnamen ein",
