@@ -14,7 +14,6 @@ class UsageLogRepository:
         session_db: Session,
         session_id: uuid.UUID,
         run_id: uuid.UUID | None = None,
-        total_cost_usd: float | None = None,
         duration_ms: int | None = None,
         input_tokens: int | None = None,
         output_tokens: int | None = None,
@@ -28,7 +27,6 @@ class UsageLogRepository:
         usage_log = UsageLog(
             session_id=session_id,
             run_id=run_id,
-            total_cost_usd=total_cost_usd,
             duration_ms=duration_ms,
             input_tokens=input_tokens,
             output_tokens=output_tokens,
@@ -95,7 +93,7 @@ class UsageLogRepository:
     def get_total_usage_by_session(
         session_db: Session, session_id: uuid.UUID
     ) -> UsageLog | None:
-        """Gets total usage (cost, input/output tokens, duration) for a session."""
+        """Gets total usage log for a session."""
         return (
             session_db.query(UsageLog).filter(UsageLog.session_id == session_id).first()
         )

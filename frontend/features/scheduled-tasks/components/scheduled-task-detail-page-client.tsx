@@ -73,11 +73,6 @@ function pickNumber(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
-function formatCostUsd(value: number | null | undefined): string {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "-";
-  return `$${value.toFixed(6)}`;
-}
-
 export function ScheduledTaskDetailPageClient({ taskId }: { taskId: string }) {
   const { t } = useT("translation");
   const router = useRouter();
@@ -434,9 +429,6 @@ export function ScheduledTaskDetailPageClient({ taskId }: { taskId: string }) {
                               {t("library.scheduledTasks.detail.runDuration")}
                             </th>
                             <th className="px-4 py-3 text-left font-medium">
-                              {t("library.scheduledTasks.detail.runCost")}
-                            </th>
-                            <th className="px-4 py-3 text-left font-medium">
                               {t("library.scheduledTasks.detail.runTokens")}
                             </th>
                             <th className="px-4 py-3 text-left font-medium">
@@ -488,9 +480,6 @@ export function ScheduledTaskDetailPageClient({ taskId }: { taskId: string }) {
                                   {durationMs !== null
                                     ? formatDurationLabel(durationMs, t)
                                     : "-"}
-                                </td>
-                                <td className="px-4 py-3 font-mono text-xs">
-                                  {formatCostUsd(run.usage?.total_cost_usd)}
                                 </td>
                                 <td className="px-4 py-3 font-mono text-xs">
                                   {tokensLabel}

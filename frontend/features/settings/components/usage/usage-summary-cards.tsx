@@ -16,7 +16,6 @@ import { CountUp } from "@/components/ui/count-up";
 import { useT } from "@/lib/i18n/client";
 import {
   formatCompactNumber,
-  formatCurrency,
   formatNumber,
 } from "@/features/settings/lib/usage-analytics";
 import type {
@@ -136,14 +135,6 @@ function UsageMetricCard({
                 />
               </div>
             ))}
-          </div>
-          <div className="mt-auto flex items-center justify-between gap-4 border-t border-dashed border-border/70 pt-3">
-            <span>{t("settings.usageTab.cost")}</span>
-            <CountUp
-              value={metric.total_cost_usd}
-              format={(n) => formatCurrency(n, locale)}
-              className="text-base font-medium text-foreground tabular-nums"
-            />
           </div>
         </div>
       </CardContent>

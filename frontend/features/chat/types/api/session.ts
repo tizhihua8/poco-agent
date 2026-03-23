@@ -139,7 +139,6 @@ export interface ToolExecutionDeltaResponse {
 }
 
 export interface UsageResponse {
-  total_cost_usd: number | null;
   total_duration_ms: number | null;
   usage_json: Record<string, unknown> | null;
 }

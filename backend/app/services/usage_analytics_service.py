@@ -1,6 +1,5 @@
 import calendar
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import Decimal
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from sqlalchemy import func
@@ -34,12 +33,6 @@ class UsageAnalyticsService:
             ) from exc
 
     @staticmethod
-    def _to_float(value: Decimal | float | int | None) -> float:
-        if value is None:
-            return 0.0
-        return float(value)
-
-    @staticmethod
     def _month_bounds(
         target_month: date, tzinfo: ZoneInfo
     ) -> tuple[datetime, datetime]:
@@ -67,9 +60,6 @@ class UsageAnalyticsService:
                 getattr(row, "cache_read_input_tokens", 0) or 0
             ),
             total_tokens=int(getattr(row, "total_tokens", 0) or 0),
-            total_cost_usd=UsageAnalyticsService._to_float(
-                getattr(row, "total_cost_usd", 0.0)
-            ),
         )
 
     def _build_summary_query(self, db: Session, user_id: str):
@@ -86,9 +76,6 @@ class UsageAnalyticsService:
                     "cache_read_input_tokens"
                 ),
                 func.coalesce(func.sum(UsageLog.total_tokens), 0).label("total_tokens"),
-                func.coalesce(func.sum(UsageLog.total_cost_usd), 0).label(
-                    "total_cost_usd"
-                ),
             )
             .join(AgentSession, AgentSession.id == UsageLog.session_id)
             .filter(AgentSession.user_id == user_id)

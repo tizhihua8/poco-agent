@@ -696,7 +696,7 @@ export function useChatMessages({
         void fetchMessages(false);
       }, pollingInterval);
     } else if (session.session_id && isTerminal) {
-      // Refresh run usage once the session becomes terminal so UI can display cost/tokens.
+      // Refresh run usage once the session becomes terminal so UI can display usage.
       void refreshRealUserMessageIds();
     }
 

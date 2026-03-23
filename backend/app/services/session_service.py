@@ -433,11 +433,6 @@ class SessionService:
                 session_db=db,
                 session_id=branched_session.id,
                 run_id=target_run_id,
-                total_cost_usd=(
-                    float(source_log.total_cost_usd)
-                    if source_log.total_cost_usd is not None
-                    else None
-                ),
                 duration_ms=source_log.duration_ms,
                 input_tokens=source_log.input_tokens,
                 output_tokens=source_log.output_tokens,
