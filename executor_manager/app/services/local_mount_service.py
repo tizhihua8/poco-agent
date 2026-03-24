@@ -18,6 +18,7 @@ from app.schemas.filesystem import (
 logger = logging.getLogger(__name__)
 
 _MOUNT_ID_PATTERN = re.compile(r"^[A-Za-z0-9._-]+$")
+_LOCAL_MOUNT_WORKSPACE_ROOT = "/workspace/.poco-local"
 _FORBIDDEN_ROOTS = {
     "/",
     "/bin",
@@ -95,7 +96,7 @@ class DirectBindMountProvider:
                     id=mount_id,
                     name=mount.name.strip(),
                     source_path=normalized_path,
-                    container_path=f"/mnt/local/{mount_id}",
+                    container_path=f"{_LOCAL_MOUNT_WORKSPACE_ROOT}/{mount_id}",
                     access_mode=mount.access_mode,
                     provider_type=self.provider_type,
                 )
@@ -179,7 +180,7 @@ class BridgeLiveMountProvider:
                     id=mount_id,
                     name=mount.name.strip(),
                     source_path=source_path_text,
-                    container_path=f"/mnt/local/{mount_id}",
+                    container_path=f"{_LOCAL_MOUNT_WORKSPACE_ROOT}/{mount_id}",
                     access_mode=mount.access_mode,
                     provider_type=self.provider_type,
                 )

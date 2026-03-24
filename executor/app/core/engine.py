@@ -48,6 +48,7 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 _SUBAGENT_NAME_PATTERN = re.compile(r"^[A-Za-z0-9._-]+$")
+_LOCAL_MOUNT_ROOT = "/workspace/.poco-local"
 
 
 @contextmanager
@@ -320,8 +321,16 @@ class AgentExecutor:
                 if not selected_model:
                     selected_model = os.environ["DEFAULT_MODEL"]
 
+                extra_allowed_dirs = sorted(
+                    {
+                        mount.container_path
+                        for mount in (config.resolved_local_mounts or [])
+                        if mount.container_path
+                    }
+                )
                 options = ClaudeAgentOptions(
                     cwd=ctx.cwd,
+                    add_dirs=extra_allowed_dirs,
                     resume=self.sdk_session_id,
                     # Load both user-level (~/.claude) and project-level (.claude) settings.
                     # Skills are staged into user-level ~/.claude/skills (symlinked to /workspace/.claude_data).
@@ -403,18 +412,35 @@ class AgentExecutor:
             lines.append("Filesystem layout for this task:")
             lines.append("- /workspace is the Poco sandbox workspace.")
             lines.append(
-                "- Authorized user local directories are mounted separately under /mnt/local/."
+                f"- Authorized user local directories are mounted under {_LOCAL_MOUNT_ROOT}/."
             )
             lines.append(
-                "- Changes under /mnt/local/... affect the user's real local files directly."
+                f"- Changes under {_LOCAL_MOUNT_ROOT}/... affect the user's real local files directly."
             )
             lines.append(
-                "- Do not treat /mnt/local/... as part of the /workspace git repository."
+                f"- Do not treat {_LOCAL_MOUNT_ROOT}/... as part of the sandbox workspace snapshot or git history."
             )
+            configured_mounts = {
+                mount.id: mount for mount in (config.local_mounts or [])
+            }
             for mount in mounts:
+                requested_host_path = None
+                configured_mount = configured_mounts.get(mount.id)
+                if configured_mount:
+                    requested_host_path = configured_mount.host_path
                 lines.append(
                     f"- {mount.container_path} ({mount.access_mode}, name: {mount.name})"
                 )
+                if requested_host_path:
+                    lines.append(
+                        "- User path "
+                        f"{requested_host_path} is exposed inside the container as "
+                        f"{mount.container_path}."
+                    )
+            lines.append(
+                "- When the user references an authorized host path, translate it to the "
+                "corresponding mounted workspace path before reading or writing."
+            )
             lines.append("Respect read-only local mounts and never write to ro paths.")
 
         return "\n".join(lines) if lines else None
@@ -434,7 +460,7 @@ class AgentExecutor:
         return (
             f"Current working directory: {cwd}. "
             "Use /workspace as the default working area. "
-            f"You may explicitly access these authorized local mount paths when needed: {mount_paths}. "
+            f"The following authorized local mount paths are available inside the workspace tree when needed: {mount_paths}. "
             "Do not mix local mount changes into workspace git operations unless the user asks."
         )
 
