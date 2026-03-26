@@ -7,7 +7,6 @@ import {
   Bot,
   Check,
   Clock3,
-  Coins,
   Copy,
   GitBranch,
   Loader2,
@@ -36,11 +35,6 @@ interface AssistantMessageProps {
 
 function pickNumber(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-
-function formatCostUsd(value: number | null | undefined): string | null {
-  if (typeof value !== "number" || !Number.isFinite(value)) return null;
-  return "$" + value.toFixed(3);
 }
 
 function formatDurationMs(value: number | null | undefined): string | null {
@@ -109,17 +103,8 @@ export function AssistantMessage({
     | undefined;
   const inputTokens = pickNumber(usageJson?.input_tokens);
   const outputTokens = pickNumber(usageJson?.output_tokens);
-  const costLabel = formatCostUsd(runUsage?.total_cost_usd);
   const durationLabel = formatDurationMs(runUsage?.total_duration_ms);
   const usageSegments: React.ReactNode[] = [];
-  if (costLabel) {
-    usageSegments.push(
-      <span key="cost" className="inline-flex items-center gap-1">
-        <Coins className="size-3" />
-        {costLabel}
-      </span>,
-    );
-  }
   if (inputTokens !== null) {
     usageSegments.push(
       <span key="input" className="inline-flex items-center gap-1">

@@ -49,7 +49,6 @@ export interface UsageAnalyticsMetricSummary {
   cache_creation_input_tokens: number;
   cache_read_input_tokens: number;
   total_tokens: number;
-  total_cost_usd: number;
 }
 
 export interface UsageAnalyticsBucket extends UsageAnalyticsMetricSummary {

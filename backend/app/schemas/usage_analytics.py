@@ -7,7 +7,6 @@ class UsageMetricSummary(BaseModel):
     cache_creation_input_tokens: int = 0
     cache_read_input_tokens: int = 0
     total_tokens: int = 0
-    total_cost_usd: float = 0.0
 
 
 class UsageAnalyticsBucket(UsageMetricSummary):

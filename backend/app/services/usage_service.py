@@ -17,21 +17,16 @@ class UsageService:
     def _aggregate_logs(logs) -> UsageResponse:
         if not logs:
             return UsageResponse(
-                total_cost_usd=None,
                 total_duration_ms=None,
                 usage_json=None,
             )
 
-        # Aggregate scalar fields
-        total_cost_usd = 0.0
         total_duration_ms = 0
 
         # Aggregate usage_json fields
         aggregated_usage: dict[str, Any] = {}
 
         for log in logs:
-            if log.total_cost_usd is not None:
-                total_cost_usd += float(log.total_cost_usd)
             if log.duration_ms is not None:
                 total_duration_ms += log.duration_ms
 
@@ -45,7 +40,6 @@ class UsageService:
                         aggregated_usage[key] = value
 
         return UsageResponse(
-            total_cost_usd=total_cost_usd,
             total_duration_ms=total_duration_ms,
             usage_json=aggregated_usage if aggregated_usage else None,
         )
@@ -64,10 +58,9 @@ class UsageService:
 
         usage = self._aggregate_logs(logs)
 
-        if usage.total_cost_usd is not None or usage.total_duration_ms is not None:
+        if usage.total_duration_ms is not None:
             logger.debug(
                 f"Retrieved usage summary for session {session_id}: "
-                f"cost=${(usage.total_cost_usd or 0):.6f}, "
                 f"duration={(usage.total_duration_ms or 0)}ms"
             )
 

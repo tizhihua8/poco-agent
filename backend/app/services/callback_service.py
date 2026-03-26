@@ -310,7 +310,6 @@ class CallbackService:
         if not usage_data or not isinstance(usage_data, dict):
             return
 
-        total_cost_usd = message.get("total_cost_usd")
         duration_ms = message.get("duration_ms")
         normalized_usage = normalize_usage_payload(usage_data)
 
@@ -318,7 +317,6 @@ class CallbackService:
             session_db=db,
             session_id=db_session.id,
             run_id=db_run.id if db_run else None,
-            total_cost_usd=total_cost_usd,
             duration_ms=duration_ms,
             input_tokens=normalized_usage["input_tokens"],
             output_tokens=normalized_usage["output_tokens"],
