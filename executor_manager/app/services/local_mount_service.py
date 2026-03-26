@@ -1,3 +1,12 @@
+"""Local mount resolution for executor containers.
+
+When executor-manager creates executor containers through `/var/run/docker.sock`,
+Docker resolves bind mount source paths from the host filesystem, not from the
+manager container filesystem. Validation here therefore checks only path shape
+and forbidden roots; Docker performs the actual existence and type checks when
+the executor container is created.
+"""
+
 import logging
 import re
 from pathlib import Path
@@ -198,6 +207,7 @@ def _normalize_mount_id(value: str) -> str:
 
 
 def _normalize_existing_directory_path(value: str) -> str:
+    """Normalize a host path for bind mounting without probing the filesystem."""
     raw = value.strip()
     path = Path(raw)
     if not path.is_absolute():
@@ -212,15 +222,5 @@ def _normalize_existing_directory_path(value: str) -> str:
         raise AppException(
             error_code=ErrorCode.BAD_REQUEST,
             message=f"Refusing to mount restricted directory: {normalized_text}",
-        )
-    if not normalized.exists():
-        raise AppException(
-            error_code=ErrorCode.BAD_REQUEST,
-            message=f"Local mount path does not exist: {normalized_text}",
-        )
-    if not normalized.is_dir():
-        raise AppException(
-            error_code=ErrorCode.BAD_REQUEST,
-            message=f"Local mount path must be a directory: {normalized_text}",
         )
     return normalized_text

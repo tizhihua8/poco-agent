@@ -1,10 +1,15 @@
 import tempfile
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 
+from app.core.errors.exceptions import AppException
 from app.core.settings import Settings
 from app.services.container_pool import ContainerPool
-from app.services.local_mount_service import LocalMountService
+from app.services.local_mount_service import (
+    LocalMountService,
+    _normalize_existing_directory_path,
+)
 
 
 class LocalMountServicePhaseOneTests(unittest.TestCase):
@@ -56,6 +61,31 @@ class LocalMountServicePhaseOneTests(unittest.TestCase):
         self.assertNotIn("local_mount_bridge_root", Settings.model_fields)
         self.assertNotIn("local_mount_helper_status", Settings.model_fields)
         self.assertNotIn("local_mount_helper_message", Settings.model_fields)
+
+    def test_normalize_path_allows_nonexistent_host_path(self) -> None:
+        missing_path = "/tmp/poco-phase-two/nonexistent/docs"
+
+        normalized = _normalize_existing_directory_path(missing_path)
+
+        self.assertEqual(normalized, str(Path(missing_path).resolve(strict=False)))
+
+    def test_normalize_path_allows_file_path_without_filesystem_checks(self) -> None:
+        with tempfile.NamedTemporaryFile() as temp_file:
+            normalized = _normalize_existing_directory_path(temp_file.name)
+
+        self.assertEqual(normalized, str(Path(temp_file.name).resolve(strict=False)))
+
+    def test_normalize_path_rejects_relative_path(self) -> None:
+        with self.assertRaises(AppException) as context:
+            _normalize_existing_directory_path("docs/project")
+
+        self.assertIn("must be absolute", str(context.exception))
+
+    def test_normalize_path_rejects_forbidden_root(self) -> None:
+        with self.assertRaises(AppException) as context:
+            _normalize_existing_directory_path("/")
+
+        self.assertIn("Refusing to mount restricted directory", str(context.exception))
 
 
 if __name__ == "__main__":
