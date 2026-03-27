@@ -955,7 +955,7 @@ if [[ "$START_ALL" = true ]]; then
   fi
 
   if [[ "$INIT_BUCKET" = true ]]; then
-    "${COMPOSE[@]}" --profile init up -d rustfs-init || \
+    "${COMPOSE[@]}" --profile init up -d --no-deps rustfs-init || \
       warn "$(msg "warn.rustfs_init_failed")"
   fi
 fi
