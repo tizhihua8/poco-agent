@@ -30,6 +30,7 @@ import type {
   ProjectPreset,
 } from "@/features/capabilities/presets/lib/preset-types";
 import { projectPresetsService } from "@/features/projects/api/project-presets-api";
+import { sortProjectPresets } from "@/features/projects/lib/project-presets";
 import { Dialog, DialogFooter } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n/client";
 
@@ -39,15 +40,6 @@ interface ProjectSettingsDialogProps {
   projectId: string;
   projectName: string;
   onProjectPresetsChange?: (items: ProjectPreset[]) => void;
-}
-
-function sortProjectPresets(items: ProjectPreset[]): ProjectPreset[] {
-  return [...items].sort((a, b) => {
-    if (a.sort_order !== b.sort_order) {
-      return a.sort_order - b.sort_order;
-    }
-    return a.project_preset_id - b.project_preset_id;
-  });
 }
 
 export function ProjectSettingsDialog({

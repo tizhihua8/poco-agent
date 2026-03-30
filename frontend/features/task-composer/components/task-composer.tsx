@@ -19,6 +19,7 @@ import { PresetSelect } from "@/features/capabilities/presets";
 import { presetsService } from "@/features/capabilities/presets/api/presets-api";
 import { useCapabilityRecommendations } from "@/features/task-composer/hooks/use-capability-recommendations";
 import { getNextComposerMode } from "@/features/task-composer/lib/mode-utils";
+import { resolveInitialPresetSelection } from "@/features/task-composer/lib/preset-selection";
 import { useSlashCommandAutocomplete } from "@/features/chat/hooks/use-slash-command-autocomplete";
 import { useAppShell } from "@/components/shell/app-shell-context";
 import { useMemoryFeatureEnabled } from "@/hooks/use-memory-feature-enabled";
@@ -207,8 +208,13 @@ export function TaskComposer({
   }, []);
 
   React.useEffect(() => {
-    if (initialPresetId === null || hasTouchedPresetRef.current) return;
-    setSelectedPresetId(initialPresetId);
+    setSelectedPresetId((currentSelectedPresetId) =>
+      resolveInitialPresetSelection({
+        initialPresetId,
+        hasTouchedPreset: hasTouchedPresetRef.current,
+        currentSelectedPresetId,
+      }),
+    );
   }, [initialPresetId]);
 
   // ---- Repo state ----

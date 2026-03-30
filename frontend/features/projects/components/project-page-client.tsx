@@ -18,6 +18,7 @@ import type { ProjectItem, TaskHistoryItem } from "@/features/projects/types";
 
 import { ProjectHeader } from "@/features/projects/components/project-header";
 import { ProjectSettingsDialog } from "@/features/projects/components/project-settings-dialog";
+import { getDefaultProjectPresetId } from "@/features/projects/lib/project-presets";
 import { CapabilityToggleProvider, ConnectorsBar } from "@/features/connectors";
 import { useAppShell } from "@/components/shell/app-shell-context";
 import { toast } from "sonner";
@@ -88,9 +89,7 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
   }, [projectId]);
 
   const defaultPresetId = React.useMemo(() => {
-    return (
-      projectPresets.find((item) => item.is_default)?.preset_id ?? null
-    );
+    return getDefaultProjectPresetId(projectPresets);
   }, [projectPresets]);
 
   const handleSendTask = React.useCallback(

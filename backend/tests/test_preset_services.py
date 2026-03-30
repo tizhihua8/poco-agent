@@ -9,8 +9,10 @@ from app.models.preset import Preset
 from app.models.project import Project
 from app.models.project_preset import ProjectPreset
 from app.schemas.preset import PresetCreateRequest, PresetUpdateRequest
+from app.schemas.session import SessionCreateRequest, TaskConfig
 from app.services.preset_service import PresetService
 from app.services.project_preset_service import ProjectPresetService
+from app.services.session_service import SessionService
 
 
 class PresetServiceTests(unittest.TestCase):
@@ -287,6 +289,37 @@ class ProjectPresetServiceTests(unittest.TestCase):
         self.db.flush.assert_called_once()
         set_default_preset.assert_called_once_with(self.db, self.project_id, 12)
         self.db.commit.assert_called_once()
+
+
+class SessionPresetConfigTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.service = SessionService()
+        self.db = MagicMock()
+        self.user_id = "user-1"
+
+    @patch("app.services.session_service.SessionRepository.create")
+    def test_create_session_persists_only_explicit_preset_config(
+        self,
+        create: MagicMock,
+    ) -> None:
+        session = MagicMock()
+        create.return_value = session
+
+        self.service.create_session(
+            self.db,
+            self.user_id,
+            SessionCreateRequest(config=TaskConfig(preset_id=8)),
+        )
+
+        create.assert_called_once_with(
+            session_db=self.db,
+            user_id=self.user_id,
+            config={"preset_id": 8},
+            project_id=None,
+            kind="chat",
+        )
+        self.db.commit.assert_called_once()
+        self.db.refresh.assert_called_once_with(session)
 
 
 if __name__ == "__main__":
