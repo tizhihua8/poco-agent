@@ -16,6 +16,24 @@ class ProjectPresetRepository:
         return project_preset
 
     @staticmethod
+    def add_to_project_record(
+        session_db: Session,
+        *,
+        project_id: uuid.UUID,
+        preset_id: int,
+        is_default: bool,
+        sort_order: int,
+    ) -> ProjectPreset:
+        project_preset = ProjectPreset(
+            project_id=project_id,
+            preset_id=preset_id,
+            is_default=is_default,
+            sort_order=sort_order,
+        )
+        session_db.add(project_preset)
+        return project_preset
+
+    @staticmethod
     def list_by_project(
         session_db: Session,
         project_id: uuid.UUID,
@@ -84,6 +102,23 @@ class ProjectPresetRepository:
         project_preset.is_default = True
         session_db.add(project_preset)
         return project_preset
+
+    @staticmethod
+    def count_projects_using_preset(session_db: Session, preset_id: int) -> int:
+        return (
+            session_db.query(ProjectPreset)
+            .filter(ProjectPreset.preset_id == preset_id)
+            .count()
+        )
+
+    @staticmethod
+    def get_max_sort_order(session_db: Session, project_id: uuid.UUID) -> int:
+        value = (
+            session_db.query(func.max(ProjectPreset.sort_order))
+            .filter(ProjectPreset.project_id == project_id)
+            .scalar()
+        )
+        return int(value or 0)
 
     @staticmethod
     def remove_from_project(

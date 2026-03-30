@@ -22,6 +22,8 @@ class ErrorCode(Enum):
     SKILL_ALREADY_EXISTS = (13002, "Skill already exists")
     SKILL_MODIFY_FORBIDDEN = (13003, "Skill modification forbidden")
     PROJECT_NOT_FOUND = (14001, "Project not found")
+    PRESET_NOT_FOUND = (14501, "Preset not found")
+    PRESET_ALREADY_EXISTS = (14502, "Preset already exists")
     SLASH_COMMAND_NOT_FOUND = (15001, "Slash command not found")
     SLASH_COMMAND_ALREADY_EXISTS = (15002, "Slash command already exists")
     SUBAGENT_NOT_FOUND = (16001, "Subagent not found")
