@@ -78,6 +78,7 @@ interface TaskComposerProps {
     git_token_env_key: string | null;
   }) => void | Promise<void>;
   bottomAddon?: React.ReactNode;
+  initialPresetId?: number | null;
   onFocus?: () => void;
   onBlur?: () => void;
 }
@@ -107,6 +108,7 @@ export function TaskComposer({
   allowProjectize = true,
   onRepoDefaultsSave,
   bottomAddon,
+  initialPresetId = null,
   onFocus,
   onBlur,
 }: TaskComposerProps) {
@@ -116,6 +118,7 @@ export function TaskComposer({
   const capabilityToggle = useCapabilityToggle();
   const isComposing = React.useRef(false);
   const memoryInitializedRef = React.useRef(false);
+  const hasTouchedPresetRef = React.useRef(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const latestValueRef = React.useRef(value);
   const trackedCapabilityItemsRef = React.useRef<TrackedCapabilityItem[]>([]);
@@ -202,6 +205,11 @@ export function TaskComposer({
       active = false;
     };
   }, []);
+
+  React.useEffect(() => {
+    if (initialPresetId === null || hasTouchedPresetRef.current) return;
+    setSelectedPresetId(initialPresetId);
+  }, [initialPresetId]);
 
   // ---- Repo state ----
   const [repoDialogOpen, setRepoDialogOpen] = React.useState(false);
@@ -598,7 +606,10 @@ export function TaskComposer({
               <PresetSelect
                 presets={presets}
                 value={selectedPresetId}
-                onChange={setSelectedPresetId}
+                onChange={(value) => {
+                  hasTouchedPresetRef.current = true;
+                  setSelectedPresetId(value);
+                }}
                 disabled={Boolean(isSubmitting)}
               />
             </div>

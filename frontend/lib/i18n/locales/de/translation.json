@@ -1519,13 +1519,44 @@
     "titleWithCount": "{{name}} · {{count}} Aufgaben",
     "share": "Projekt teilen",
     "settings": "Projekteinstellungen",
+    "settingsAction": "Vorlagen verwalten",
     "rename": "Projekt umbenennen",
     "renameDescription": "Gib einen neuen Projektnamen ein",
     "nameLabel": "Projektname",
     "namePlaceholder": "Projektnamen eingeben",
     "delete": "Projekt löschen",
     "deleteDescription": "Das Löschen dieses Projekts verschiebt alle seine Aufgaben zurück in die Hauptliste.",
-    "deleteConfirm": "Löschen"
+    "deleteConfirm": "Löschen",
+    "settingsPanel": {
+      "dialogTitle": "{{name}} Einstellungen",
+      "dialogDescription": "Verwalte, welche Vorlagen in diesem Projekt verfügbar sind, und wähle die Standardvorlage für neue Läufe.",
+      "presets": {
+        "title": "Projektvorlagen",
+        "description": "Verknüpfe wiederverwendbare Vorlagen mit diesem Projekt, wähle eine Standardvorlage und steuere ihre Reihenfolge.",
+        "addLabel": "Vorlage hinzufügen",
+        "addPlaceholder": "Vorlage zum Hinzufügen auswählen",
+        "add": "Vorlage hinzufügen",
+        "loading": "Projektvorlagen werden geladen...",
+        "empty": "Diesem Projekt sind noch keine Vorlagen zugeordnet",
+        "default": "Standard",
+        "emptyDescription": "Noch keine Beschreibung",
+        "stats": {
+          "skills": "{{count}} Skills",
+          "mcp": "{{count}} MCP",
+          "plugins": "{{count}} Vorlagen"
+        },
+        "toasts": {
+          "loadError": "Projektvorlagen konnten nicht geladen werden",
+          "added": "Vorlage zum Projekt hinzugefügt",
+          "addFailed": "Vorlage konnte nicht zum Projekt hinzugefügt werden",
+          "removed": "Vorlage aus dem Projekt entfernt",
+          "removeFailed": "Vorlage konnte nicht aus dem Projekt entfernt werden",
+          "defaultUpdated": "Standardvorlage aktualisiert",
+          "defaultFailed": "Standardvorlage konnte nicht aktualisiert werden",
+          "orderFailed": "Reihenfolge der Projektvorlagen konnte nicht aktualisiert werden"
+        }
+      }
+    }
   },
   "userMenu": {
     "credits": "Guthaben",

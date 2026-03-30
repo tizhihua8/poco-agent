@@ -1519,13 +1519,44 @@
     "titleWithCount": "{{name}} ・ {{count}}件のタスク",
     "share": "プロジェクトを共有",
     "settings": "プロジェクト設定",
+    "settingsAction": "プリセットを管理",
     "rename": "プロジェクト名を変更",
     "renameDescription": "新しいプロジェクト名を入力してください",
     "nameLabel": "プロジェクト名",
     "namePlaceholder": "プロジェクト名を入力",
     "delete": "プロジェクトを削除",
     "deleteDescription": "このプロジェクトを削除すると、すべてのタスクがメインリストに戻ります。",
-    "deleteConfirm": "削除"
+    "deleteConfirm": "削除",
+    "settingsPanel": {
+      "dialogTitle": "{{name}} の設定",
+      "dialogDescription": "このプロジェクトで利用できるプリセットを管理し、新しい実行のデフォルトを選択します。",
+      "presets": {
+        "title": "プロジェクトプリセット",
+        "description": "再利用可能なプリセットをこのプロジェクトに紐づけ、デフォルトを選び、順序を管理します。",
+        "addLabel": "プリセットを追加",
+        "addPlaceholder": "追加するプリセットを選択",
+        "add": "プリセットを追加",
+        "loading": "プロジェクトプリセットを読み込み中...",
+        "empty": "このプロジェクトにはまだプリセットが紐づいていません",
+        "default": "デフォルト",
+        "emptyDescription": "説明はまだありません",
+        "stats": {
+          "skills": "{{count}} スキル",
+          "mcp": "{{count}} MCP",
+          "plugins": "{{count}} プリセット"
+        },
+        "toasts": {
+          "loadError": "プロジェクトプリセットの読み込みに失敗しました",
+          "added": "プリセットをプロジェクトに追加しました",
+          "addFailed": "プリセットをプロジェクトに追加できませんでした",
+          "removed": "プリセットをプロジェクトから削除しました",
+          "removeFailed": "プリセットをプロジェクトから削除できませんでした",
+          "defaultUpdated": "デフォルトプリセットを更新しました",
+          "defaultFailed": "デフォルトプリセットの更新に失敗しました",
+          "orderFailed": "プロジェクトプリセットの並び替えに失敗しました"
+        }
+      }
+    }
   },
   "userMenu": {
     "credits": "クレジット",

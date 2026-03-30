@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { MoreHorizontal, PenSquare, Share2, Trash2 } from "lucide-react";
+import {
+  MoreHorizontal,
+  PenSquare,
+  Settings2,
+  Share2,
+  Trash2,
+} from "lucide-react";
 
 import { useT } from "@/lib/i18n/client";
 import { Button } from "@/components/ui/button";
@@ -28,12 +34,14 @@ import { PageHeaderShell } from "@/components/shared/page-header-shell";
 
 interface ProjectHeaderProps {
   project?: ProjectItem;
+  onOpenSettings?: () => void;
   onRenameProject?: (projectId: string, name: string) => void;
   onDeleteProject?: (projectId: string) => Promise<void> | void;
 }
 
 export function ProjectHeader({
   project,
+  onOpenSettings,
   onRenameProject,
   onDeleteProject,
 }: ProjectHeaderProps) {
@@ -90,6 +98,12 @@ export function ProjectHeader({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" side="right">
+              {onOpenSettings ? (
+                <DropdownMenuItem onClick={onOpenSettings}>
+                  <Settings2 className="size-4" />
+                  <span>{t("project.settingsAction")}</span>
+                </DropdownMenuItem>
+              ) : null}
               <DropdownMenuItem onClick={() => setIsRenameDialogOpen(true)}>
                 <PenSquare className="size-4" />
                 <span>{t("project.rename")}</span>

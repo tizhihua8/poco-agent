@@ -1519,13 +1519,44 @@
     "titleWithCount": "{{name}} · {{count}} 个任务",
     "share": "分享项目",
     "settings": "项目设置",
+    "settingsAction": "管理预设",
     "rename": "重命名项目",
     "renameDescription": "请输入新的项目名称",
     "nameLabel": "项目名称",
     "namePlaceholder": "请输入项目名称",
     "delete": "删除项目",
     "deleteDescription": "删除项目后，项目中的所有任务将回到任务清单。",
-    "deleteConfirm": "删除"
+    "deleteConfirm": "删除",
+    "settingsPanel": {
+      "dialogTitle": "{{name}} 设置",
+      "dialogDescription": "管理这个项目可用的预设，并为新任务选择默认预设。",
+      "presets": {
+        "title": "项目预设",
+        "description": "为项目绑定可复用预设，设置默认值，并调整显示顺序。",
+        "addLabel": "添加预设",
+        "addPlaceholder": "选择要添加的预设",
+        "add": "添加预设",
+        "loading": "正在加载项目预设...",
+        "empty": "这个项目还没有绑定预设",
+        "default": "默认",
+        "emptyDescription": "暂无描述",
+        "stats": {
+          "skills": "{{count}} 个技能",
+          "mcp": "{{count}} 个 MCP",
+          "plugins": "{{count}} 个预设"
+        },
+        "toasts": {
+          "loadError": "加载项目预设失败",
+          "added": "已将预设添加到项目",
+          "addFailed": "添加项目预设失败",
+          "removed": "已从项目移除预设",
+          "removeFailed": "移除项目预设失败",
+          "defaultUpdated": "默认预设已更新",
+          "defaultFailed": "更新默认预设失败",
+          "orderFailed": "调整项目预设顺序失败"
+        }
+      }
+    }
   },
   "userMenu": {
     "credits": "积分",

@@ -13,12 +13,15 @@ import {
   submitTask,
   useAutosizeTextarea,
 } from "@/features/task-composer";
+import type { ProjectPreset } from "@/features/capabilities/presets";
 import type { ProjectItem, TaskHistoryItem } from "@/features/projects/types";
 
 import { ProjectHeader } from "@/features/projects/components/project-header";
+import { ProjectSettingsDialog } from "@/features/projects/components/project-settings-dialog";
 import { CapabilityToggleProvider, ConnectorsBar } from "@/features/connectors";
 import { useAppShell } from "@/components/shell/app-shell-context";
 import { toast } from "sonner";
+import { projectPresetsService } from "@/features/projects/api/project-presets-api";
 
 interface ProjectPageClientProps {
   projectId: string;
@@ -38,6 +41,10 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
   const [inputValue, setInputValue] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [mode, setMode] = React.useState<ComposerMode>("task");
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [projectPresets, setProjectPresets] = React.useState<ProjectPreset[]>(
+    [],
+  );
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   useAutosizeTextarea(textareaRef, inputValue);
@@ -58,6 +65,33 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
       count: projectTaskCount,
     });
   }, [currentProject?.name, projectTaskCount, t]);
+
+  React.useEffect(() => {
+    let active = true;
+
+    const loadProjectPresets = async () => {
+      try {
+        const items = await projectPresetsService.list(projectId, {
+          revalidate: 0,
+        });
+        if (!active) return;
+        setProjectPresets(items);
+      } catch (error) {
+        console.error("[ProjectPage] Failed to load project presets", error);
+      }
+    };
+
+    void loadProjectPresets();
+    return () => {
+      active = false;
+    };
+  }, [projectId]);
+
+  const defaultPresetId = React.useMemo(() => {
+    return (
+      projectPresets.find((item) => item.is_default)?.preset_id ?? null
+    );
+  }, [projectPresets]);
 
   const handleSendTask = React.useCallback(
     async (options?: TaskSendOptions) => {
@@ -159,6 +193,7 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
       <div className="flex flex-1 flex-col min-h-0">
         <ProjectHeader
           project={currentProject}
+          onOpenSettings={() => setSettingsOpen(true)}
           onRenameProject={handleRenameProject}
           onDeleteProject={handleDeleteProject}
         />
@@ -175,11 +210,22 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
             onSend: handleSendTask,
             isSubmitting,
             allowProjectize: false,
+            initialPresetId: defaultPresetId,
             onRepoDefaultsSave: async (payload) => {
               await updateProject(projectId, payload);
             },
           }}
         />
+
+        {currentProject ? (
+          <ProjectSettingsDialog
+            open={settingsOpen}
+            onOpenChange={setSettingsOpen}
+            projectId={projectId}
+            projectName={currentProject.name}
+            onProjectPresetsChange={setProjectPresets}
+          />
+        ) : null}
       </div>
     </CapabilityToggleProvider>
   );

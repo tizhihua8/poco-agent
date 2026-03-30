@@ -1519,13 +1519,44 @@
     "titleWithCount": "{{name}} · {{count}} tâches",
     "share": "Partager le projet",
     "settings": "Paramètres du projet",
+    "settingsAction": "Gérer les préréglages",
     "rename": "Renommer le projet",
     "renameDescription": "Entrez un nouveau nom de projet",
     "nameLabel": "Nom du projet",
     "namePlaceholder": "Entrez le nom du projet",
     "delete": "Supprimer le projet",
     "deleteDescription": "La suppression de ce projet déplacera toutes ses tâches vers la liste principale.",
-    "deleteConfirm": "Supprimer"
+    "deleteConfirm": "Supprimer",
+    "settingsPanel": {
+      "dialogTitle": "Paramètres de {{name}}",
+      "dialogDescription": "Gérez les préréglages disponibles dans ce projet et choisissez celui par défaut pour les nouvelles exécutions.",
+      "presets": {
+        "title": "Préréglages du projet",
+        "description": "Associez des préréglages réutilisables à ce projet, choisissez une valeur par défaut et contrôlez leur ordre.",
+        "addLabel": "Ajouter un préréglage",
+        "addPlaceholder": "Sélectionnez un préréglage à ajouter",
+        "add": "Ajouter un préréglage",
+        "loading": "Chargement des préréglages du projet...",
+        "empty": "Aucun préréglage n’est rattaché à ce projet",
+        "default": "Par défaut",
+        "emptyDescription": "Aucune description pour le moment",
+        "stats": {
+          "skills": "{{count}} compétences",
+          "mcp": "{{count}} MCP",
+          "plugins": "{{count}} préréglages"
+        },
+        "toasts": {
+          "loadError": "Échec du chargement des préréglages du projet",
+          "added": "Préréglage ajouté au projet",
+          "addFailed": "Échec de l’ajout du préréglage au projet",
+          "removed": "Préréglage retiré du projet",
+          "removeFailed": "Échec du retrait du préréglage du projet",
+          "defaultUpdated": "Préréglage par défaut mis à jour",
+          "defaultFailed": "Échec de la mise à jour du préréglage par défaut",
+          "orderFailed": "Échec de la réorganisation des préréglages du projet"
+        }
+      }
+    }
   },
   "userMenu": {
     "credits": "Crédits",

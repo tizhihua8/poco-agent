@@ -1519,13 +1519,44 @@
     "titleWithCount": "{{name}} · {{count}} tasks",
     "share": "Share Project",
     "settings": "Project Settings",
+    "settingsAction": "Manage Presets",
     "rename": "Rename Project",
     "renameDescription": "Enter a new project name",
     "nameLabel": "Project name",
     "namePlaceholder": "Enter project name",
     "delete": "Delete Project",
     "deleteDescription": "Deleting this project will move all of its tasks back to the main list.",
-    "deleteConfirm": "Delete"
+    "deleteConfirm": "Delete",
+    "settingsPanel": {
+      "dialogTitle": "{{name}} settings",
+      "dialogDescription": "Manage which presets are available in this project and choose the default one for new runs.",
+      "presets": {
+        "title": "Project presets",
+        "description": "Attach reusable presets to this project, pick a default, and control their order.",
+        "addLabel": "Add preset",
+        "addPlaceholder": "Select a preset to add",
+        "add": "Add preset",
+        "loading": "Loading project presets...",
+        "empty": "No presets attached to this project",
+        "default": "Default",
+        "emptyDescription": "No description yet",
+        "stats": {
+          "skills": "{{count}} skills",
+          "mcp": "{{count}} MCP",
+          "plugins": "{{count}} presets"
+        },
+        "toasts": {
+          "loadError": "Failed to load project presets",
+          "added": "Preset added to project",
+          "addFailed": "Failed to add preset to project",
+          "removed": "Preset removed from project",
+          "removeFailed": "Failed to remove preset from project",
+          "defaultUpdated": "Default preset updated",
+          "defaultFailed": "Failed to update default preset",
+          "orderFailed": "Failed to reorder project presets"
+        }
+      }
+    }
   },
   "userMenu": {
     "credits": "Credits",

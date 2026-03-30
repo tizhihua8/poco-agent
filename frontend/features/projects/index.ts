@@ -2,6 +2,7 @@ export { CreateProjectDialog } from "@/features/projects/components/create-proje
 export { MoveTaskToProjectDialog } from "@/features/projects/components/move-task-to-project-dialog";
 export { ProjectHeader } from "@/features/projects/components/project-header";
 export { ProjectPageClient } from "@/features/projects/components/project-page-client";
+export { ProjectSettingsDialog } from "@/features/projects/components/project-settings-dialog";
 export { RenameProjectDialog } from "@/features/projects/components/rename-project-dialog";
 export { RenameTaskDialog } from "@/features/projects/components/rename-task-dialog";
 export { TaskActionsDropdown } from "@/features/projects/components/task-actions-dropdown";
