@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FolderKanban, PanelLeftClose, PanelLeftOpen, Settings2 } from "lucide-react";
+import { FolderKanban, PanelLeftClose, Settings2 } from "lucide-react";
 
 import { useT } from "@/lib/i18n/client";
 import { Button } from "@/components/ui/button";
@@ -26,56 +26,63 @@ export function ProjectHeader({
 
   if (isDrawerOpen) {
     return (
-      <div className="flex h-14 min-h-14 items-center justify-between px-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-1.5">
-          <FolderKanban className="size-4 shrink-0 text-primary" />
-          <span className="truncate text-sm font-medium text-foreground">
-            {project?.name ?? t("project.untitled", "Untitled Project")}
-          </span>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 text-muted-foreground hover:bg-muted"
-            onClick={onOpenSettings}
-            aria-label={t("project.settings")}
-            title={t("project.settings")}
-          >
-            <Settings2 className="size-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 text-muted-foreground hover:bg-muted"
-            onClick={onToggleDrawer}
-            aria-label={t("chat.collapse")}
-            title={t("chat.collapse")}
-          >
-            <PanelLeftClose className="size-4" />
-          </Button>
-        </div>
-      </div>
+      <PageHeaderShell
+        sticky={false}
+        hideSidebarTrigger
+        className="border-b-0 pt-[8px]"
+        left={
+          <div className="flex min-w-0 items-center gap-1.5">
+            <FolderKanban className="size-4 shrink-0 text-primary" />
+            <span className="truncate text-sm font-medium text-foreground">
+              {project?.name ?? t("project.untitled", "Untitled Project")}
+            </span>
+          </div>
+        }
+        right={
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 text-muted-foreground hover:bg-muted"
+              onClick={onOpenSettings}
+              aria-label={t("project.settings")}
+              title={t("project.settings")}
+            >
+              <Settings2 className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 text-muted-foreground hover:bg-muted"
+              onClick={onToggleDrawer}
+              aria-label={t("chat.collapse")}
+              title={t("chat.collapse")}
+            >
+              <PanelLeftClose className="size-4" />
+            </Button>
+          </>
+        }
+      />
     );
   }
 
   return (
     <PageHeaderShell
-      className="border-b-0"
+      className="border-b-0 pt-[8px]"
       left={
         <div className="flex min-w-0 items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn("-ml-2 gap-2 px-2 text-sm")}
+          <button
+            type="button"
+            className={cn(
+              "inline-flex min-w-0 items-center gap-1.5 rounded-md px-2 py-1 text-left text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+            )}
             onClick={onToggleDrawer}
           >
-            <PanelLeftOpen className="size-4 shrink-0 text-muted-foreground" />
             <FolderKanban className="size-4 shrink-0 text-primary" />
             <span className="truncate font-medium text-foreground">
               {project?.name ?? t("project.untitled", "Untitled Project")}
             </span>
-          </Button>
+          </button>
         </div>
       }
     />

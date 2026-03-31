@@ -1538,7 +1538,10 @@
       "renameAction": "Namen bearbeiten",
       "emptyDescription": "Dieses Projekt hat noch keine Zusammenfassung. Starte eine neue Sitzung, um Kontext aufzubauen.",
       "unknownUpdatedAt": "Noch keine Aktivität",
-      "composerTitle": "Neue Sitzung in {{name}} starten",
+      "composerTitle": "Poco in {{name}} weiter steuern",
+      "infoDrawer": {
+        "title": "Projektinfos"
+      },
       "notFoundTitle": "Projekt nicht gefunden",
       "notFoundDescription": "Dieses Projekt ist nicht verfügbar oder du hast keinen Zugriff mehr darauf.",
       "backHome": "Zur Startseite",
