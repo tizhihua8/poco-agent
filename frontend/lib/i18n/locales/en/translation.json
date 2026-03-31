@@ -1529,6 +1529,7 @@
     "rename": "Rename Project",
     "renameDescription": "Enter a new project name",
     "nameLabel": "Project name",
+    "descriptionLabel": "Description",
     "namePlaceholder": "Enter project name",
     "delete": "Delete Project",
     "deleteDescription": "Deleting this project will move all of its tasks back to the main list.",
@@ -1536,6 +1537,8 @@
     "detail": {
       "overview": "Project overview",
       "renameAction": "Edit name",
+      "descriptionPlaceholder": "Add project description...",
+      "editDescription": "Edit description",
       "emptyDescription": "This project does not have a summary yet. Start with a new session to build context.",
       "unknownUpdatedAt": "No activity yet",
       "composerTitle": "Continue directing Poco in {{name}}",

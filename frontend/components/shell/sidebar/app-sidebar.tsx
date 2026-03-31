@@ -10,6 +10,7 @@ import {
   type ProjectItem,
   type TaskHistoryItem,
 } from "@/features/projects";
+import type { ProjectCreateInput } from "@/components/shell/app-shell-context";
 import { MainSidebar } from "./main-sidebar";
 import type { SettingsTabId } from "@/features/settings";
 
@@ -22,7 +23,7 @@ interface AppSidebarProps {
   onRenameTask?: (taskId: string, newName: string) => Promise<void> | void;
   onMoveTaskToProject?: (taskId: string, projectId: string | null) => void;
   onToggleTaskPin?: (taskId: string) => void;
-  onCreateProject?: (name: string) => void;
+  onCreateProject?: (input: ProjectCreateInput) => void;
   onRenameProject?: (projectId: string, newName: string) => void;
   onDeleteProject?: (projectId: string) => Promise<void> | void;
   onOpenSettings?: (tab?: SettingsTabId) => void;
@@ -73,8 +74,8 @@ export function AppSidebar({
 
   // Project creation handling
   const handleCreateProject = React.useCallback(
-    (name: string) => {
-      onCreateProject?.(name);
+    (input: ProjectCreateInput) => {
+      onCreateProject?.(input);
     },
     [onCreateProject],
   );

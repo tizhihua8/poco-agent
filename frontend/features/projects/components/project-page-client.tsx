@@ -217,7 +217,10 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
                     sessionCount={projectTasks.length}
                     presetCount={projectPresets.length}
                     onUpdateProject={async (updates) => {
-                      await updateProject(projectId, { name: updates.name });
+                      await updateProject(projectId, {
+                        name: updates.name,
+                        description: updates.description,
+                      });
                     }}
                     onOpenSettings={() => setSettingsOpen(true)}
                     onDeleteProject={async () => {

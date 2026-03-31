@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ProjectCreateRequest(BaseModel):
     name: str
+    description: str | None = None
     repo_url: str | None = None
     git_branch: str | None = None
     git_token_env_key: str | None = None
@@ -13,6 +14,7 @@ class ProjectCreateRequest(BaseModel):
 
 class ProjectUpdateRequest(BaseModel):
     name: str | None = None
+    description: str | None = None
     repo_url: str | None = None
     git_branch: str | None = None
     git_token_env_key: str | None = None
@@ -22,6 +24,7 @@ class ProjectResponse(BaseModel):
     project_id: UUID = Field(validation_alias="id")
     user_id: str
     name: str
+    description: str | None = None
     repo_url: str | None = None
     git_branch: str | None = None
     git_token_env_key: str | None = None

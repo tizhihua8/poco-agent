@@ -1529,6 +1529,7 @@
     "rename": "Projekt umbenennen",
     "renameDescription": "Gib einen neuen Projektnamen ein",
     "nameLabel": "Projektname",
+    "descriptionLabel": "Projektbeschreibung",
     "namePlaceholder": "Projektnamen eingeben",
     "delete": "Projekt löschen",
     "deleteDescription": "Das Löschen dieses Projekts verschiebt alle seine Aufgaben zurück in die Hauptliste.",
@@ -1536,6 +1537,8 @@
     "detail": {
       "overview": "Projektübersicht",
       "renameAction": "Namen bearbeiten",
+      "descriptionPlaceholder": "Projektbeschreibung hinzufügen...",
+      "editDescription": "Beschreibung bearbeiten",
       "emptyDescription": "Dieses Projekt hat noch keine Zusammenfassung. Starte eine neue Sitzung, um Kontext aufzubauen.",
       "unknownUpdatedAt": "Noch keine Aktivität",
       "composerTitle": "Poco in {{name}} weiter steuern",

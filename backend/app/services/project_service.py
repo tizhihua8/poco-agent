@@ -94,6 +94,7 @@ class ProjectService:
     def create_project(
         self, db: Session, user_id: str, request: ProjectCreateRequest
     ) -> ProjectResponse:
+        description = self._normalize_optional_str(request.description)
         repo_url, git_branch, git_token_env_key = self._normalize_repo_settings(
             repo_url=request.repo_url,
             git_branch=request.git_branch,
@@ -102,6 +103,7 @@ class ProjectService:
         project = Project(
             user_id=user_id,
             name=request.name,
+            description=description,
             repo_url=repo_url,
             git_branch=git_branch,
             git_token_env_key=git_token_env_key,
@@ -128,6 +130,8 @@ class ProjectService:
         update = request.model_dump(exclude_unset=True)
         if "name" in update and request.name is not None:
             project.name = request.name
+        if "description" in update:
+            project.description = self._normalize_optional_str(request.description)
 
         if "repo_url" in update:
             repo_url, git_branch, git_token_env_key = self._normalize_repo_settings(

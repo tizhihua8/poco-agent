@@ -13,11 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CreateProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreateProject: (name: string) => void;
+  onCreateProject: (data: { name: string; description?: string }) => void;
 }
 
 /**
@@ -31,6 +32,7 @@ export function CreateProjectDialog({
 }: CreateProjectDialogProps) {
   const { t } = useT("translation");
   const [projectName, setProjectName] = React.useState("");
+  const [projectDescription, setProjectDescription] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = React.useState(false);
 
@@ -42,6 +44,7 @@ export function CreateProjectDialog({
   React.useEffect(() => {
     if (open) {
       setProjectName("");
+      setProjectDescription("");
       // Focus input after dialog opens
       setTimeout(() => {
         inputRef.current?.focus();
@@ -54,7 +57,10 @@ export function CreateProjectDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (projectName.trim()) {
-      onCreateProject(projectName.trim());
+      onCreateProject({
+        name: projectName.trim(),
+        description: projectDescription.trim() || undefined,
+      });
       onOpenChange(false);
     }
   };
@@ -83,6 +89,18 @@ export function CreateProjectDialog({
                     onOpenChange(false);
                   }
                 }}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="project-description">
+                {t("project.descriptionLabel")}
+              </Label>
+              <Textarea
+                id="project-description"
+                value={projectDescription}
+                onChange={(e) => setProjectDescription(e.target.value)}
+                placeholder={t("project.detail.descriptionPlaceholder")}
+                rows={4}
               />
             </div>
           </div>

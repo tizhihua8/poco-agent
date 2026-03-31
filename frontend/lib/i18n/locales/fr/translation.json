@@ -1529,6 +1529,7 @@
     "rename": "Renommer le projet",
     "renameDescription": "Entrez un nouveau nom de projet",
     "nameLabel": "Nom du projet",
+    "descriptionLabel": "Description du projet",
     "namePlaceholder": "Entrez le nom du projet",
     "delete": "Supprimer le projet",
     "deleteDescription": "La suppression de ce projet déplacera toutes ses tâches vers la liste principale.",
@@ -1536,6 +1537,8 @@
     "detail": {
       "overview": "Vue d’ensemble du projet",
       "renameAction": "Modifier le nom",
+      "descriptionPlaceholder": "Ajouter une description du projet...",
+      "editDescription": "Modifier la description",
       "emptyDescription": "Ce projet n’a pas encore de résumé. Démarrez une nouvelle session pour créer du contexte.",
       "unknownUpdatedAt": "Aucune activité pour le moment",
       "composerTitle": "Continuer à piloter Poco dans {{name}}",

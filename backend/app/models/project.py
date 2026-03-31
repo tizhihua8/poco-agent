@@ -20,6 +20,7 @@ class Project(Base, TimestampMixin):
     )
     user_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Default git repository context for this project (GitHub-only in v1).
     repo_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     git_branch: Mapped[str | None] = mapped_column(String(255), nullable=True)

@@ -211,7 +211,8 @@ export function HomePageClient() {
               }
             })() || repoUrl;
 
-          const created = await addProject(projectName || derived, {
+          const created = await addProject({
+            name: projectName || derived,
             repo_url: repoUrl,
             git_branch: gitBranch,
             git_token_env_key: gitTokenEnvKey || null,

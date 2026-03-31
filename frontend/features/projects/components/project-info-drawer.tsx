@@ -14,6 +14,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,11 +60,29 @@ export function ProjectInfoDrawer({
   const [isRenameDialogOpen, setIsRenameDialogOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const [isEditingDescription, setIsEditingDescription] = React.useState(false);
+  const [descriptionDraft, setDescriptionDraft] = React.useState(
+    project.description ?? "",
+  );
+  const [isSavingDescription, setIsSavingDescription] = React.useState(false);
+  const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const summary =
-    project.description?.trim() ||
-    project.repoUrl?.trim() ||
-    t("project.detail.emptyDescription");
+  React.useEffect(() => {
+    if (!isEditingDescription) {
+      setDescriptionDraft(project.description ?? "");
+    }
+  }, [isEditingDescription, project.description]);
+
+  React.useEffect(() => {
+    if (!isEditingDescription) return;
+    const frame = window.requestAnimationFrame(() => {
+      descriptionRef.current?.focus();
+      descriptionRef.current?.select();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [isEditingDescription]);
+
+  const summary = project.description?.trim() || "";
 
   const updatedLabel =
     formatUpdatedAt(project.updatedAt, lng) ||
@@ -126,14 +145,73 @@ export function ProjectInfoDrawer({
     }
   }, [onDeleteProject]);
 
+  const handleSaveDescription = React.useCallback(async () => {
+    if (isSavingDescription) return;
+    const nextDescription = descriptionDraft.trim();
+    const currentDescription = project.description?.trim() || "";
+    if (nextDescription === currentDescription) {
+      setIsEditingDescription(false);
+      return;
+    }
+    try {
+      setIsSavingDescription(true);
+      await onUpdateProject({ description: nextDescription || null });
+      setIsEditingDescription(false);
+    } finally {
+      setIsSavingDescription(false);
+    }
+  }, [descriptionDraft, isSavingDescription, onUpdateProject, project.description]);
+
   return (
     <>
       <aside className="flex h-full w-72 shrink-0 flex-col bg-background">
         <div className="flex-1 overflow-y-auto px-4 pb-4 pt-4">
           <div className="space-y-1">
-            <p className="line-clamp-2 text-sm leading-5 text-muted-foreground">
-              {summary}
-            </p>
+            {isEditingDescription ? (
+              <Textarea
+                ref={descriptionRef}
+                value={descriptionDraft}
+                onChange={(event) => setDescriptionDraft(event.target.value)}
+                onBlur={() => {
+                  void handleSaveDescription();
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    event.preventDefault();
+                    setDescriptionDraft(project.description ?? "");
+                    setIsEditingDescription(false);
+                    return;
+                  }
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    void handleSaveDescription();
+                  }
+                }}
+                placeholder={t("project.detail.descriptionPlaceholder")}
+                rows={4}
+                disabled={isSavingDescription}
+                className="min-h-24 resize-none text-sm leading-5"
+              />
+            ) : (
+              <button
+                type="button"
+                className="w-full rounded-md px-2 py-1.5 text-left transition-colors hover:bg-muted/60"
+                onClick={() => setIsEditingDescription(true)}
+                aria-label={t("project.detail.editDescription")}
+                title={t("project.detail.editDescription")}
+              >
+                <p
+                  className={cn(
+                    "text-sm leading-5",
+                    summary
+                      ? "text-muted-foreground"
+                      : "text-muted-foreground/80",
+                  )}
+                >
+                  {summary || t("project.detail.descriptionPlaceholder")}
+                </p>
+              </button>
+            )}
           </div>
 
           {project.repoUrl || project.gitBranch ? (

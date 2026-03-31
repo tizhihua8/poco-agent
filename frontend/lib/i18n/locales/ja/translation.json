@@ -1529,6 +1529,7 @@
     "rename": "プロジェクト名を変更",
     "renameDescription": "新しいプロジェクト名を入力してください",
     "nameLabel": "プロジェクト名",
+    "descriptionLabel": "プロジェクトの説明",
     "namePlaceholder": "プロジェクト名を入力",
     "delete": "プロジェクトを削除",
     "deleteDescription": "このプロジェクトを削除すると、すべてのタスクがメインリストに戻ります。",
@@ -1536,6 +1537,8 @@
     "detail": {
       "overview": "プロジェクト概要",
       "renameAction": "名前を編集",
+      "descriptionPlaceholder": "プロジェクトの説明を追加...",
+      "editDescription": "説明を編集",
       "emptyDescription": "このプロジェクトにはまだ概要がありません。新しいセッションを始めてコンテキストを作成してください。",
       "unknownUpdatedAt": "まだアクティビティはありません",
       "composerTitle": "{{name}} で Poco への指示を続ける",
