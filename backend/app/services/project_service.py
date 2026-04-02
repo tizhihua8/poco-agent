@@ -228,6 +228,10 @@ class ProjectService:
             project.default_model = self._normalize_optional_str(request.default_model)
         if "local_mounts" in update:
             local_mounts = self._normalize_local_mounts(request.local_mounts)
+            project.project_local_mounts.clear()
+            # Flush orphan deletes before inserting replacement mounts to avoid
+            # transient unique-key conflicts on (project_id, mount_id).
+            db.flush()
             project.project_local_mounts = self._build_project_local_mount_models(
                 local_mounts
             )

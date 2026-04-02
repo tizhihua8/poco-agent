@@ -134,6 +134,58 @@ class ProjectServiceTests(unittest.TestCase):
         self.assertEqual(result.local_mounts[0].access_mode, "ro")
         self.assertEqual(result.local_mounts[1].id, "assets")
 
+    @patch("app.services.project_service.ProjectRepository.get_by_id")
+    def test_update_project_flushes_deleted_mounts_before_reinserting(
+        self,
+        get_by_id: MagicMock,
+    ) -> None:
+        project = Project(
+            id=uuid.uuid4(),
+            user_id=self.user_id,
+            name="Demo",
+            description=None,
+            default_model=None,
+            repo_url=None,
+            git_branch=None,
+            git_token_env_key=None,
+            is_deleted=False,
+            created_at=self.now,
+            updated_at=self.now,
+        )
+        project.project_local_mounts = [
+            ProjectLocalMount(
+                mount_id="notes",
+                name="Notes",
+                host_path="/workspace/notes",
+                access_mode="rw",
+                sort_order=0,
+            )
+        ]
+        get_by_id.return_value = project
+        self.db.refresh.side_effect = lambda _: None
+
+        self.service.update_project(
+            self.db,
+            self.user_id,
+            project.id,
+            ProjectUpdateRequest(
+                local_mounts=[
+                    LocalMountConfig(
+                        id="notes",
+                        name="Notes",
+                        host_path="/workspace/new-notes",
+                        access_mode="ro",
+                    )
+                ],
+            ),
+        )
+
+        self.db.flush.assert_called_once()
+        self.assertLess(
+            self.db.method_calls.index(unittest.mock.call.flush()),
+            self.db.method_calls.index(unittest.mock.call.commit()),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
