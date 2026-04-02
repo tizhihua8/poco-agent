@@ -1611,15 +1611,15 @@
     },
     "settingsPanel": {
       "dialogTitle": "{{name}} settings",
-      "dialogDescription": "Manage which presets are available in this project and choose the default one for new runs.",
+      "dialogDescription": "Search across all presets and choose the default one for new runs in this project.",
       "presets": {
-        "title": "Project presets",
-        "description": "Attach reusable presets to this project, pick a default, and control their order.",
-        "addLabel": "Add preset",
-        "addPlaceholder": "Select a preset to add",
-        "add": "Add preset",
-        "loading": "Loading project presets...",
-        "empty": "No presets attached to this project",
+        "title": "Default preset",
+        "description": "Pick one preset for this project, or clear the default to start new runs without one.",
+        "searchPlaceholder": "Search presets...",
+        "clearDefault": "Clear default",
+        "loading": "Loading presets...",
+        "empty": "No default preset selected",
+        "emptySearch": "No presets match your search",
         "default": "Default",
         "emptyDescription": "No description yet",
         "stats": {
@@ -1628,14 +1628,9 @@
           "plugins": "{{count}} plugins"
         },
         "toasts": {
-          "loadError": "Failed to load project presets",
-          "added": "Preset added to project",
-          "addFailed": "Failed to add preset to project",
-          "removed": "Preset removed from project",
-          "removeFailed": "Failed to remove preset from project",
+          "loadError": "Failed to load presets",
           "defaultUpdated": "Default preset updated",
-          "defaultFailed": "Failed to update default preset",
-          "orderFailed": "Failed to reorder project presets"
+          "defaultFailed": "Failed to update default preset"
         }
       }
     }

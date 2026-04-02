@@ -1611,15 +1611,15 @@
     },
     "settingsPanel": {
       "dialogTitle": "Paramètres de {{name}}",
-      "dialogDescription": "Gérez les préréglages disponibles dans ce projet et choisissez celui par défaut pour les nouvelles exécutions.",
+      "dialogDescription": "Recherchez parmi tous les préréglages et choisissez celui par défaut pour les nouvelles exécutions de ce projet.",
       "presets": {
-        "title": "Préréglages du projet",
-        "description": "Associez des préréglages réutilisables à ce projet, choisissez une valeur par défaut et contrôlez leur ordre.",
-        "addLabel": "Ajouter un préréglage",
-        "addPlaceholder": "Sélectionnez un préréglage à ajouter",
-        "add": "Ajouter un préréglage",
-        "loading": "Chargement des préréglages du projet...",
-        "empty": "Aucun préréglage n’est rattaché à ce projet",
+        "title": "Préréglage par défaut",
+        "description": "Choisissez un préréglage pour ce projet, ou effacez la valeur par défaut pour démarrer les nouvelles exécutions sans préréglage.",
+        "searchPlaceholder": "Rechercher des préréglages...",
+        "clearDefault": "Effacer le défaut",
+        "loading": "Chargement des préréglages...",
+        "empty": "Aucun préréglage par défaut sélectionné",
+        "emptySearch": "Aucun préréglage ne correspond à votre recherche",
         "default": "Par défaut",
         "emptyDescription": "Aucune description pour le moment",
         "stats": {
@@ -1628,14 +1628,9 @@
           "plugins": "{{count}} plugins"
         },
         "toasts": {
-          "loadError": "Échec du chargement des préréglages du projet",
-          "added": "Préréglage ajouté au projet",
-          "addFailed": "Échec de l’ajout du préréglage au projet",
-          "removed": "Préréglage retiré du projet",
-          "removeFailed": "Échec du retrait du préréglage du projet",
+          "loadError": "Échec du chargement des préréglages",
           "defaultUpdated": "Préréglage par défaut mis à jour",
-          "defaultFailed": "Échec de la mise à jour du préréglage par défaut",
-          "orderFailed": "Échec de la réorganisation des préréglages du projet"
+          "defaultFailed": "Échec de la mise à jour du préréglage par défaut"
         }
       }
     }

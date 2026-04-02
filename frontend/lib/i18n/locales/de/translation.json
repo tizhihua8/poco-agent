@@ -1611,15 +1611,15 @@
     },
     "settingsPanel": {
       "dialogTitle": "{{name}} Einstellungen",
-      "dialogDescription": "Verwalte, welche Vorlagen in diesem Projekt verfügbar sind, und wähle die Standardvorlage für neue Läufe.",
+      "dialogDescription": "Durchsuche alle Vorlagen und wähle die Standardvorlage für neue Läufe in diesem Projekt.",
       "presets": {
-        "title": "Projektvorlagen",
-        "description": "Verknüpfe wiederverwendbare Vorlagen mit diesem Projekt, wähle eine Standardvorlage und steuere ihre Reihenfolge.",
-        "addLabel": "Vorlage hinzufügen",
-        "addPlaceholder": "Vorlage zum Hinzufügen auswählen",
-        "add": "Vorlage hinzufügen",
-        "loading": "Projektvorlagen werden geladen...",
-        "empty": "Diesem Projekt sind noch keine Vorlagen zugeordnet",
+        "title": "Standardvorlage",
+        "description": "Wähle eine Vorlage für dieses Projekt oder entferne den Standardwert, damit neue Läufe ohne Vorlage starten.",
+        "searchPlaceholder": "Vorlagen suchen...",
+        "clearDefault": "Standard löschen",
+        "loading": "Vorlagen werden geladen...",
+        "empty": "Keine Standardvorlage ausgewählt",
+        "emptySearch": "Keine Vorlage entspricht deiner Suche",
         "default": "Standard",
         "emptyDescription": "Noch keine Beschreibung",
         "stats": {
@@ -1628,14 +1628,9 @@
           "plugins": "{{count}} Plugins"
         },
         "toasts": {
-          "loadError": "Projektvorlagen konnten nicht geladen werden",
-          "added": "Vorlage zum Projekt hinzugefügt",
-          "addFailed": "Vorlage konnte nicht zum Projekt hinzugefügt werden",
-          "removed": "Vorlage aus dem Projekt entfernt",
-          "removeFailed": "Vorlage konnte nicht aus dem Projekt entfernt werden",
+          "loadError": "Vorlagen konnten nicht geladen werden",
           "defaultUpdated": "Standardvorlage aktualisiert",
-          "defaultFailed": "Standardvorlage konnte nicht aktualisiert werden",
-          "orderFailed": "Reihenfolge der Projektvorlagen konnte nicht aktualisiert werden"
+          "defaultFailed": "Standardvorlage konnte nicht aktualisiert werden"
         }
       }
     }

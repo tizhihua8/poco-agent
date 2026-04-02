@@ -1611,15 +1611,15 @@
     },
     "settingsPanel": {
       "dialogTitle": "{{name}} 设置",
-      "dialogDescription": "管理这个项目可用的预设，并为新任务选择默认预设。",
+      "dialogDescription": "在全部预设中搜索，并为这个项目的新任务选择默认预设。",
       "presets": {
-        "title": "项目预设",
-        "description": "为项目绑定可复用预设，设置默认值，并调整显示顺序。",
-        "addLabel": "添加预设",
-        "addPlaceholder": "选择要添加的预设",
-        "add": "添加预设",
-        "loading": "正在加载项目预设...",
-        "empty": "这个项目还没有绑定预设",
+        "title": "默认预设",
+        "description": "为项目选择一个默认预设，或者清空默认值，让新任务不带预设启动。",
+        "searchPlaceholder": "搜索预设...",
+        "clearDefault": "清空默认值",
+        "loading": "正在加载预设...",
+        "empty": "当前还没有默认预设",
+        "emptySearch": "没有符合搜索条件的预设",
         "default": "默认",
         "emptyDescription": "暂无描述",
         "stats": {
@@ -1628,14 +1628,9 @@
           "plugins": "{{count}} 个插件"
         },
         "toasts": {
-          "loadError": "加载项目预设失败",
-          "added": "已将预设添加到项目",
-          "addFailed": "添加项目预设失败",
-          "removed": "已从项目移除预设",
-          "removeFailed": "移除项目预设失败",
+          "loadError": "加载预设失败",
           "defaultUpdated": "默认预设已更新",
-          "defaultFailed": "更新默认预设失败",
-          "orderFailed": "调整项目预设顺序失败"
+          "defaultFailed": "更新默认预设失败"
         }
       }
     }
