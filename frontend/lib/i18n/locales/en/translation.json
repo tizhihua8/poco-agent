@@ -1526,6 +1526,7 @@
     "share": "Share Project",
     "settings": "Project Settings",
     "settingsAction": "Manage Presets",
+    "edit": "Edit Project",
     "rename": "Rename Project",
     "nameLabel": "Project name",
     "descriptionLabel": "Description",
@@ -1534,6 +1535,14 @@
       "title": "Advanced config",
       "defaultModelLabel": "Default model",
       "defaultModelPlaceholder": "Use workspace default model",
+      "gitTitle": "Git Repository",
+      "gitDescription": "Configure the default Git repo URL, branch, and authentication for this project.",
+      "gitRepoUrlLabel": "Repository URL",
+      "gitRepoUrlPlaceholder": "https://github.com/user/repo.git",
+      "gitBranchLabel": "Branch",
+      "gitBranchPlaceholder": "main",
+      "gitTokenEnvKeyLabel": "Auth Env Variable",
+      "gitTokenEnvKeyPlaceholder": "GITHUB_TOKEN",
       "mountTitle": "Project mounts",
       "mountDescription": "Apply one or more local directories to new runs in this project.",
       "chooseFolder": "Choose folder",
@@ -1612,6 +1621,19 @@
     "settingsPanel": {
       "dialogTitle": "{{name}} settings",
       "dialogDescription": "Search across all presets and choose the default one for new runs in this project.",
+      "git": {
+        "title": "Git Repository",
+        "repoUrlLabel": "Repository URL",
+        "repoUrlPlaceholder": "https://github.com/user/repo.git",
+        "branchLabel": "Branch",
+        "branchPlaceholder": "main",
+        "tokenEnvKeyLabel": "Auth Env Variable",
+        "tokenEnvKeyPlaceholder": "GITHUB_TOKEN",
+        "toasts": {
+          "updated": "Git configuration updated",
+          "failed": "Failed to update git configuration"
+        }
+      },
       "presets": {
         "title": "Default preset",
         "description": "Pick one preset for this project, or clear the default to start new runs without one.",

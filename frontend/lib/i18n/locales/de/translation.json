@@ -1526,6 +1526,7 @@
     "share": "Projekt teilen",
     "settings": "Projekteinstellungen",
     "settingsAction": "Vorlagen verwalten",
+    "edit": "Projekt bearbeiten",
     "rename": "Projekt umbenennen",
     "nameLabel": "Projektname",
     "descriptionLabel": "Projektbeschreibung",
@@ -1534,6 +1535,14 @@
       "title": "Erweiterte Konfiguration",
       "defaultModelLabel": "Standardmodell",
       "defaultModelPlaceholder": "Standardmodell des Arbeitsbereichs verwenden",
+      "gitTitle": "Git-Repository",
+      "gitDescription": "Konfiguriere die Standard-Git-Repository-URL, den Branch und die Authentifizierung für dieses Projekt.",
+      "gitRepoUrlLabel": "Repository-URL",
+      "gitRepoUrlPlaceholder": "https://github.com/user/repo.git",
+      "gitBranchLabel": "Branch",
+      "gitBranchPlaceholder": "main",
+      "gitTokenEnvKeyLabel": "Auth-Umgebungsvariable",
+      "gitTokenEnvKeyPlaceholder": "GITHUB_TOKEN",
       "mountTitle": "Projekt-Mounts",
       "mountDescription": "Hänge für neue Ausführungen in diesem Projekt ein oder mehrere lokale Verzeichnisse an.",
       "chooseFolder": "Ordner auswählen",
@@ -1612,6 +1621,19 @@
     "settingsPanel": {
       "dialogTitle": "{{name}} Einstellungen",
       "dialogDescription": "Durchsuche alle Vorlagen und wähle die Standardvorlage für neue Läufe in diesem Projekt.",
+      "git": {
+        "title": "Git-Repository",
+        "repoUrlLabel": "Repository-URL",
+        "repoUrlPlaceholder": "https://github.com/user/repo.git",
+        "branchLabel": "Branch",
+        "branchPlaceholder": "main",
+        "tokenEnvKeyLabel": "Auth-Umgebungsvariable",
+        "tokenEnvKeyPlaceholder": "GITHUB_TOKEN",
+        "toasts": {
+          "updated": "Git-Konfiguration aktualisiert",
+          "failed": "Git-Konfiguration konnte nicht aktualisiert werden"
+        }
+      },
       "presets": {
         "title": "Standardvorlage",
         "description": "Wähle eine Vorlage für dieses Projekt oder entferne den Standardwert, damit neue Läufe ohne Vorlage starten.",

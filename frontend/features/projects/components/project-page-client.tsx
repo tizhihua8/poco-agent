@@ -256,6 +256,9 @@ export function ProjectPageClient({ projectId }: ProjectPageClientProps) {
                         description: updates.description,
                         default_model: updates.defaultModel,
                         local_mounts: updates.localMounts,
+                        repo_url: updates.repoUrl,
+                        git_branch: updates.gitBranch,
+                        git_token_env_key: updates.gitTokenEnvKey,
                       });
                     }}
                     onOpenSettings={() => setSettingsOpen(true)}

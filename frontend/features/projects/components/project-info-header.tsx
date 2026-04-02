@@ -35,12 +35,18 @@ export function ProjectInfoHeader({
       description?: string | null,
       defaultModel?: string | null,
       localMounts?: LocalMountConfig[],
+      gitConfig?: {
+        repo_url?: string | null;
+        git_branch?: string | null;
+        git_token_env_key?: string | null;
+      },
     ) => {
       await onUpdate({
         name,
         description,
         defaultModel,
         localMounts,
+        ...gitConfig,
       });
     },
     [onUpdate],
@@ -118,9 +124,12 @@ export function ProjectInfoHeader({
         projectDescription={project.description}
         projectDefaultModel={project.defaultModel}
         projectLocalMounts={project.localMounts}
+        projectRepoUrl={project.repoUrl}
+        projectGitBranch={project.gitBranch}
+        projectGitTokenEnvKey={project.gitTokenEnvKey}
         allowDescriptionEdit
-        onRename={(name, description, defaultModel, localMounts) => {
-          void handleRename(name, description, defaultModel, localMounts);
+        onRename={(name, description, defaultModel, localMounts, gitConfig) => {
+          void handleRename(name, description, defaultModel, localMounts, gitConfig);
         }}
       />
     </>

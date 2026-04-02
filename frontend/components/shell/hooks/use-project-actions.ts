@@ -3,26 +3,29 @@ import { useCallback } from "react";
 interface UseProjectActionsOptions {
   updateProject: (
     projectId: string,
-    updates: { name: string },
+    updates: Record<string, unknown>,
   ) => Promise<unknown>;
   deleteProject: (projectId: string) => Promise<void>;
 }
 
 interface UseProjectActionsResult {
-  handleRenameProject: (projectId: string, newName: string) => void;
+  handleEditProject: (
+    projectId: string,
+    updates: Record<string, unknown>,
+  ) => void;
   handleDeleteProject: (projectId: string) => Promise<void>;
 }
 
 /**
- * Hook to create stable callbacks for project rename and delete actions.
+ * Hook to create stable callbacks for project edit and delete actions.
  */
 export function useProjectActions({
   updateProject,
   deleteProject,
 }: UseProjectActionsOptions): UseProjectActionsResult {
-  const handleRenameProject = useCallback(
-    (projectId: string, newName: string) => {
-      updateProject(projectId, { name: newName });
+  const handleEditProject = useCallback(
+    (projectId: string, updates: Record<string, unknown>) => {
+      void updateProject(projectId, updates);
     },
     [updateProject],
   );
@@ -35,7 +38,7 @@ export function useProjectActions({
   );
 
   return {
-    handleRenameProject,
+    handleEditProject,
     handleDeleteProject,
   };
 }

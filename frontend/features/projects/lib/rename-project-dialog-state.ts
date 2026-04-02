@@ -23,6 +23,9 @@ interface RenameProjectDialogStateInput {
   projectDescription?: string | null;
   projectDefaultModel?: string | null;
   projectLocalMounts?: LocalMountConfig[] | null;
+  projectRepoUrl?: string | null;
+  projectGitBranch?: string | null;
+  projectGitTokenEnvKey?: string | null;
 }
 
 interface RenameProjectDialogState {
@@ -31,6 +34,9 @@ interface RenameProjectDialogState {
   modelSelection: ModelSelection | null;
   filesystemMode: "sandbox" | "local_mount";
   mountRows: LocalMountDraftRow[];
+  repoUrl: string;
+  gitBranch: string;
+  gitTokenEnvKey: string;
 }
 
 export function createRenameProjectDialogState({
@@ -38,6 +44,9 @@ export function createRenameProjectDialogState({
   projectDescription,
   projectDefaultModel,
   projectLocalMounts,
+  projectRepoUrl,
+  projectGitBranch,
+  projectGitTokenEnvKey,
 }: RenameProjectDialogStateInput): RenameProjectDialogState {
   const modelId = (projectDefaultModel || "").trim();
 
@@ -53,5 +62,8 @@ export function createRenameProjectDialogState({
     filesystemMode:
       (projectLocalMounts?.length ?? 0) > 0 ? "local_mount" : "sandbox",
     mountRows: toProjectMountDraftRows(projectLocalMounts),
+    repoUrl: projectRepoUrl ?? "",
+    gitBranch: projectGitBranch ?? "main",
+    gitTokenEnvKey: projectGitTokenEnvKey ?? "",
   };
 }

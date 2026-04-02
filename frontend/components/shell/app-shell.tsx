@@ -53,7 +53,7 @@ export function AppShell({
     removeProject,
   });
 
-  const { handleRenameProject, handleDeleteProject } = useProjectActions({
+  const { handleEditProject, handleDeleteProject } = useProjectActions({
     updateProject,
     deleteProject,
   });
@@ -112,7 +112,7 @@ export function AppShell({
               onMoveTaskToProject={moveTask}
               onToggleTaskPin={toggleTaskPin}
               onCreateProject={addProject}
-              onRenameProject={handleRenameProject}
+              onRenameProject={handleEditProject}
               onDeleteProject={handleDeleteProject}
               onOpenSettings={openSettings}
               onStartOnboarding={onboarding.startTour}

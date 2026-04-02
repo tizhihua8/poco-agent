@@ -1526,6 +1526,7 @@
     "share": "Поделиться проектом",
     "settings": "Настройки проекта",
     "settingsAction": "Управлять пресетами",
+    "edit": "Редактировать проект",
     "rename": "Переименовать проект",
     "nameLabel": "Имя проекта",
     "descriptionLabel": "Описание проекта",
@@ -1534,6 +1535,14 @@
       "title": "Расширенные настройки",
       "defaultModelLabel": "Модель по умолчанию",
       "defaultModelPlaceholder": "Использовать модель рабочего пространства по умолчанию",
+      "gitTitle": "Git-репозиторий",
+      "gitDescription": "Настройте URL репозитория Git, ветку и аутентификацию по умолчанию для этого проекта.",
+      "gitRepoUrlLabel": "URL репозитория",
+      "gitRepoUrlPlaceholder": "https://github.com/user/repo.git",
+      "gitBranchLabel": "Ветка",
+      "gitBranchPlaceholder": "main",
+      "gitTokenEnvKeyLabel": "Переменная окружения для авторизации",
+      "gitTokenEnvKeyPlaceholder": "GITHUB_TOKEN",
       "mountTitle": "Монтирования проекта",
       "mountDescription": "Добавьте один или несколько локальных каталогов для новых запусков в этом проекте.",
       "chooseFolder": "Выбрать папку",
@@ -1612,6 +1621,19 @@
     "settingsPanel": {
       "dialogTitle": "Настройки {{name}}",
       "dialogDescription": "Ищите среди всех пресетов и выбирайте пресет по умолчанию для новых запусков в этом проекте.",
+      "git": {
+        "title": "Git-репозиторий",
+        "repoUrlLabel": "URL репозитория",
+        "repoUrlPlaceholder": "https://github.com/user/repo.git",
+        "branchLabel": "Ветка",
+        "branchPlaceholder": "main",
+        "tokenEnvKeyLabel": "Переменная окружения для авторизации",
+        "tokenEnvKeyPlaceholder": "GITHUB_TOKEN",
+        "toasts": {
+          "updated": "Конфигурация Git обновлена",
+          "failed": "Не удалось обновить конфигурацию Git"
+        }
+      },
       "presets": {
         "title": "Пресет по умолчанию",
         "description": "Выберите один пресет для этого проекта или очистите значение по умолчанию, чтобы новые запуски стартовали без пресета.",

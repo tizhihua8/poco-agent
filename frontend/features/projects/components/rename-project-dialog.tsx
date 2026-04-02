@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, GitBranch } from "lucide-react";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n/client";
 import {
@@ -55,11 +55,19 @@ interface RenameProjectDialogProps {
   projectDescription?: string | null;
   projectDefaultModel?: string | null;
   projectLocalMounts?: LocalMountConfig[] | null;
+  projectRepoUrl?: string | null;
+  projectGitBranch?: string | null;
+  projectGitTokenEnvKey?: string | null;
   onRename: (
     newName: string,
     newDescription?: string | null,
     defaultModel?: string | null,
     localMounts?: LocalMountConfig[],
+    gitConfig?: {
+      repo_url?: string | null;
+      git_branch?: string | null;
+      git_token_env_key?: string | null;
+    },
   ) => void;
   allowDescriptionEdit?: boolean;
 }
@@ -71,6 +79,9 @@ export function RenameProjectDialog({
   projectDescription,
   projectDefaultModel,
   projectLocalMounts,
+  projectRepoUrl,
+  projectGitBranch,
+  projectGitTokenEnvKey,
   onRename,
   allowDescriptionEdit = false,
 }: RenameProjectDialogProps) {
@@ -85,8 +96,19 @@ export function RenameProjectDialog({
         projectDescription,
         projectDefaultModel,
         projectLocalMounts,
+        projectRepoUrl,
+        projectGitBranch,
+        projectGitTokenEnvKey,
       }),
-    [projectDefaultModel, projectDescription, projectLocalMounts, projectName],
+    [
+      projectDefaultModel,
+      projectDescription,
+      projectGitBranch,
+      projectGitTokenEnvKey,
+      projectLocalMounts,
+      projectName,
+      projectRepoUrl,
+    ],
   );
   const [name, setName] = React.useState(initialState.name);
   const [description, setDescription] = React.useState(
@@ -100,6 +122,11 @@ export function RenameProjectDialog({
   );
   const [mountRows, setMountRows] = React.useState<LocalMountDraftRow[]>(
     initialState.mountRows,
+  );
+  const [repoUrl, setRepoUrl] = React.useState(initialState.repoUrl);
+  const [gitBranch, setGitBranch] = React.useState(initialState.gitBranch);
+  const [gitTokenEnvKey, setGitTokenEnvKey] = React.useState(
+    initialState.gitTokenEnvKey,
   );
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -123,6 +150,9 @@ export function RenameProjectDialog({
     setModelSelection(initialState.modelSelection);
     setFilesystemMode(initialState.filesystemMode);
     setMountRows(initialState.mountRows);
+    setRepoUrl(initialState.repoUrl);
+    setGitBranch(initialState.gitBranch);
+    setGitTokenEnvKey(initialState.gitTokenEnvKey);
     setAdvancedOpen(false);
   }, [initialState, open]);
 
@@ -223,6 +253,9 @@ export function RenameProjectDialog({
     const nextDescription = trimmedDescription || null;
     const nextDefaultModel = modelSelection?.modelId?.trim() || null;
     const nextLocalMounts = validationResult.value.local_mounts;
+    const trimmedRepoUrl = repoUrl.trim();
+    const trimmedBranch = gitBranch.trim() || "main";
+    const trimmedTokenKey = gitTokenEnvKey.trim();
     const hasNameChange = trimmed !== projectName;
     const hasDescriptionChange =
       allowDescriptionEdit && trimmedDescription !== currentDescription;
@@ -231,21 +264,40 @@ export function RenameProjectDialog({
     const hasLocalMountChange =
       serializeLocalMounts(nextLocalMounts) !==
       serializeLocalMounts(projectLocalMounts ?? []);
+    const hasGitChange =
+      trimmedRepoUrl !== (projectRepoUrl ?? "") ||
+      trimmedBranch !== (projectGitBranch ?? "main") ||
+      trimmedTokenKey !== (projectGitTokenEnvKey ?? "");
 
     if (
       !trimmed ||
       (!hasNameChange &&
         !hasDescriptionChange &&
         !hasDefaultModelChange &&
-        !hasLocalMountChange)
+        !hasLocalMountChange &&
+        !hasGitChange)
     ) {
       return;
     }
 
+    const gitConfig = hasGitChange
+      ? {
+          repo_url: trimmedRepoUrl || null,
+          git_branch: trimmedBranch,
+          git_token_env_key: trimmedTokenKey || null,
+        }
+      : undefined;
+
     if (allowDescriptionEdit) {
-      onRename(trimmed, nextDescription, nextDefaultModel, nextLocalMounts);
+      onRename(
+        trimmed,
+        nextDescription,
+        nextDefaultModel,
+        nextLocalMounts,
+        gitConfig,
+      );
     } else {
-      onRename(trimmed, undefined, nextDefaultModel, nextLocalMounts);
+      onRename(trimmed, undefined, nextDefaultModel, nextLocalMounts, gitConfig);
     }
     onOpenChange(false);
   };
@@ -337,16 +389,71 @@ export function RenameProjectDialog({
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-border/60 bg-background px-4 py-3">
-                    <div className="min-w-0">
-                      <div className="min-w-0">
-                        <Label className="flex items-center gap-2 text-sm font-medium">
-                          {t("project.advanced.mountTitle")}
+                  {/* Git Repository */}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <GitBranch className="size-4 text-muted-foreground" />
+                      <Label className="text-sm font-medium">
+                        {t("project.advanced.gitTitle")}
+                      </Label>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t("project.advanced.gitDescription")}
+                    </p>
+                    <div className="mt-3 grid gap-3">
+                      <div className="grid gap-1.5">
+                        <Label htmlFor="git-repo-url" className="text-xs">
+                          {t("project.advanced.gitRepoUrlLabel")}
                         </Label>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {t("project.advanced.mountDescription")}
-                        </p>
+                        <Input
+                          id="git-repo-url"
+                          value={repoUrl}
+                          onChange={(e) => setRepoUrl(e.target.value)}
+                          placeholder={t(
+                            "project.advanced.gitRepoUrlPlaceholder",
+                          )}
+                        />
                       </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="grid gap-1.5">
+                          <Label htmlFor="git-branch" className="text-xs">
+                            {t("project.advanced.gitBranchLabel")}
+                          </Label>
+                          <Input
+                            id="git-branch"
+                            value={gitBranch}
+                            onChange={(e) => setGitBranch(e.target.value)}
+                            placeholder={t(
+                              "project.advanced.gitBranchPlaceholder",
+                            )}
+                          />
+                        </div>
+                        <div className="grid gap-1.5">
+                          <Label htmlFor="git-token-env-key" className="text-xs">
+                            {t("project.advanced.gitTokenEnvKeyLabel")}
+                          </Label>
+                          <Input
+                            id="git-token-env-key"
+                            value={gitTokenEnvKey}
+                            onChange={(e) => setGitTokenEnvKey(e.target.value)}
+                            placeholder={t(
+                              "project.advanced.gitTokenEnvKeyPlaceholder",
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Local Mounts */}
+                  <div>
+                    <div className="min-w-0">
+                      <Label className="flex items-center gap-2 text-sm font-medium">
+                        {t("project.advanced.mountTitle")}
+                      </Label>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {t("project.advanced.mountDescription")}
+                      </p>
                     </div>
 
                     <div className="mt-4 grid gap-4">

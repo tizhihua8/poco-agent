@@ -149,12 +149,18 @@ export function ProjectInfoDrawer({
       newDescription?: string | null,
       defaultModel?: string | null,
       localMounts?: LocalMountConfig[],
+      gitConfig?: {
+        repo_url?: string | null;
+        git_branch?: string | null;
+        git_token_env_key?: string | null;
+      },
     ) => {
       void onUpdateProject({
         name: newName,
         description: newDescription,
         defaultModel,
         localMounts,
+        ...gitConfig,
       });
     },
     [onUpdateProject],
@@ -274,6 +280,9 @@ export function ProjectInfoDrawer({
         projectDescription={project.description}
         projectDefaultModel={project.defaultModel}
         projectLocalMounts={project.localMounts}
+        projectRepoUrl={project.repoUrl}
+        projectGitBranch={project.gitBranch}
+        projectGitTokenEnvKey={project.gitTokenEnvKey}
         allowDescriptionEdit
         onRename={handleRename}
       />

@@ -224,7 +224,7 @@ interface SidebarContentSectionProps {
   onRenameTask?: (taskId: string, newName: string) => Promise<void> | void;
   onMoveTaskToProject?: (taskId: string, projectId: string | null) => void;
   onToggleTaskPin: (taskId: string) => void;
-  onRenameProject?: (projectId: string, newName: string) => void;
+  onRenameProject?: (projectId: string, updates: Record<string, unknown>) => void;
   onDeleteProject?: (projectId: string) => Promise<void> | void;
   onOpenCreateProjectDialog?: () => void;
   // Selection state (from useSidebarSelection)
@@ -299,8 +299,8 @@ export function SidebarContentSection({
   );
 
   const handleRenameProject = React.useCallback(
-    (projectId: string, name: string) => {
-      onRenameProject?.(projectId, name);
+    (projectId: string, updates: Record<string, unknown>) => {
+      onRenameProject?.(projectId, updates);
     },
     [onRenameProject],
   );

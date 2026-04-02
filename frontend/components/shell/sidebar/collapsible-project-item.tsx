@@ -58,7 +58,7 @@ interface CollapsibleProjectItemProps {
   onMoveTaskToProject?: (taskId: string, projectId: string | null) => void;
   onToggleTaskPin: (taskId: string) => void;
   allProjects: ProjectItem[];
-  onRenameProject?: (projectId: string, newName: string) => void;
+  onRenameProject?: (projectId: string, updates: Record<string, unknown>) => void;
   onDeleteProject?: (projectId: string) => Promise<void> | void;
   isProjectSelectionMode?: boolean;
   isTaskSelectionMode?: boolean;
@@ -109,8 +109,19 @@ export function CollapsibleProjectItem({
 
   const isSelected = selectedProjectIds?.has(project.id);
 
-  const handleRename = (newName: string) => {
-    onRenameProject?.(project.id, newName);
+  const handleRename = (
+    name: string,
+    description?: string | null,
+    defaultModel?: string | null,
+    localMounts?: unknown,
+    gitConfig?: Record<string, unknown>,
+  ) => {
+    const updates: Record<string, unknown> = { name };
+    if (description !== undefined) updates.description = description;
+    if (defaultModel !== undefined) updates.default_model = defaultModel;
+    if (localMounts !== undefined) updates.local_mounts = localMounts;
+    if (gitConfig) Object.assign(updates, gitConfig);
+    onRenameProject?.(project.id, updates);
   };
 
   const handleDelete = async () => {
@@ -237,7 +248,7 @@ export function CollapsibleProjectItem({
                   }}
                 >
                   <PenSquare className="size-4" />
-                  <span>{t("project.rename")}</span>
+                  <span>{t("project.edit")}</span>
                 </DropdownMenuItem>
                 {onDeleteProject && (
                   <>
@@ -283,6 +294,13 @@ export function CollapsibleProjectItem({
           open={isRenameDialogOpen}
           onOpenChange={setIsRenameDialogOpen}
           projectName={project.name}
+          projectDescription={project.description}
+          projectDefaultModel={project.defaultModel}
+          projectLocalMounts={project.localMounts}
+          projectRepoUrl={project.repoUrl}
+          projectGitBranch={project.gitBranch}
+          projectGitTokenEnvKey={project.gitTokenEnvKey}
+          allowDescriptionEdit
           onRename={handleRename}
         />
         <AlertDialog

@@ -1526,6 +1526,7 @@
     "share": "Partager le projet",
     "settings": "Paramètres du projet",
     "settingsAction": "Gérer les préréglages",
+    "edit": "Modifier le projet",
     "rename": "Renommer le projet",
     "nameLabel": "Nom du projet",
     "descriptionLabel": "Description du projet",
@@ -1534,6 +1535,14 @@
       "title": "Configuration avancée",
       "defaultModelLabel": "Modèle par défaut",
       "defaultModelPlaceholder": "Utiliser le modèle par défaut de l'espace de travail",
+      "gitTitle": "Dépôt Git",
+      "gitDescription": "Configurez l'URL du dépôt Git, la branche et l'authentification par défaut pour ce projet.",
+      "gitRepoUrlLabel": "URL du dépôt",
+      "gitRepoUrlPlaceholder": "https://github.com/user/repo.git",
+      "gitBranchLabel": "Branche",
+      "gitBranchPlaceholder": "main",
+      "gitTokenEnvKeyLabel": "Variable d'env. d'authentification",
+      "gitTokenEnvKeyPlaceholder": "GITHUB_TOKEN",
       "mountTitle": "Montages du projet",
       "mountDescription": "Ajoutez un ou plusieurs répertoires locaux aux nouvelles exécutions de ce projet.",
       "chooseFolder": "Choisir un dossier",
@@ -1612,6 +1621,19 @@
     "settingsPanel": {
       "dialogTitle": "Paramètres de {{name}}",
       "dialogDescription": "Recherchez parmi tous les préréglages et choisissez celui par défaut pour les nouvelles exécutions de ce projet.",
+      "git": {
+        "title": "Dépôt Git",
+        "repoUrlLabel": "URL du dépôt",
+        "repoUrlPlaceholder": "https://github.com/user/repo.git",
+        "branchLabel": "Branche",
+        "branchPlaceholder": "main",
+        "tokenEnvKeyLabel": "Variable d'env. d'authentification",
+        "tokenEnvKeyPlaceholder": "GITHUB_TOKEN",
+        "toasts": {
+          "updated": "Configuration Git mise à jour",
+          "failed": "Échec de la mise à jour de la configuration Git"
+        }
+      },
       "presets": {
         "title": "Préréglage par défaut",
         "description": "Choisissez un préréglage pour ce projet, ou effacez la valeur par défaut pour démarrer les nouvelles exécutions sans préréglage.",

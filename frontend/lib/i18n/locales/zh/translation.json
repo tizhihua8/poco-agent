@@ -1526,6 +1526,7 @@
     "share": "分享项目",
     "settings": "项目设置",
     "settingsAction": "管理预设",
+    "edit": "编辑项目",
     "rename": "重命名项目",
     "nameLabel": "项目名称",
     "descriptionLabel": "项目描述",
@@ -1534,6 +1535,14 @@
       "title": "高级配置",
       "defaultModelLabel": "默认模型",
       "defaultModelPlaceholder": "使用工作区默认模型",
+      "gitTitle": "Git 仓库",
+      "gitDescription": "为这个项目配置默认的 Git 仓库地址、分支和认证方式。",
+      "gitRepoUrlLabel": "仓库地址",
+      "gitRepoUrlPlaceholder": "https://github.com/user/repo.git",
+      "gitBranchLabel": "分支",
+      "gitBranchPlaceholder": "main",
+      "gitTokenEnvKeyLabel": "认证环境变量",
+      "gitTokenEnvKeyPlaceholder": "GITHUB_TOKEN",
       "mountTitle": "项目挂载",
       "mountDescription": "为这个项目的新运行附加一个或多个本地目录。",
       "chooseFolder": "选择文件夹",
@@ -1612,6 +1621,19 @@
     "settingsPanel": {
       "dialogTitle": "{{name}} 设置",
       "dialogDescription": "在全部预设中搜索，并为这个项目的新任务选择默认预设。",
+      "git": {
+        "title": "Git 仓库",
+        "repoUrlLabel": "仓库地址",
+        "repoUrlPlaceholder": "https://github.com/user/repo.git",
+        "branchLabel": "分支",
+        "branchPlaceholder": "main",
+        "tokenEnvKeyLabel": "认证环境变量",
+        "tokenEnvKeyPlaceholder": "GITHUB_TOKEN",
+        "toasts": {
+          "updated": "Git 配置已更新",
+          "failed": "更新 Git 配置失败"
+        }
+      },
       "presets": {
         "title": "默认预设",
         "description": "为项目选择一个默认预设，或者清空默认值，让新任务不带预设启动。",

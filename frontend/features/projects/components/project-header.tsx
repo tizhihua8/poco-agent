@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FolderKanban, PanelLeftClose, Settings2 } from "lucide-react";
+import { FolderKanban, PanelLeftClose } from "lucide-react";
 
 import { useT } from "@/lib/i18n/client";
 import { Button } from "@/components/ui/button";
@@ -13,14 +13,12 @@ interface ProjectHeaderProps {
   project?: ProjectItem;
   isDrawerOpen?: boolean;
   onToggleDrawer?: () => void;
-  onOpenSettings?: () => void;
 }
 
 export function ProjectHeader({
   project,
   isDrawerOpen,
   onToggleDrawer,
-  onOpenSettings,
 }: ProjectHeaderProps) {
   const { t } = useT("translation");
 
@@ -39,28 +37,16 @@ export function ProjectHeader({
           </div>
         }
         right={
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 text-muted-foreground hover:bg-muted"
-              onClick={onOpenSettings}
-              aria-label={t("project.settings")}
-              title={t("project.settings")}
-            >
-              <Settings2 className="size-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 text-muted-foreground hover:bg-muted"
-              onClick={onToggleDrawer}
-              aria-label={t("chat.collapse")}
-              title={t("chat.collapse")}
-            >
-              <PanelLeftClose className="size-4" />
-            </Button>
-          </>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-muted-foreground hover:bg-muted"
+            onClick={onToggleDrawer}
+            aria-label={t("chat.collapse")}
+            title={t("chat.collapse")}
+          >
+            <PanelLeftClose className="size-4" />
+          </Button>
         }
       />
     );

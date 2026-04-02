@@ -1526,6 +1526,7 @@
     "share": "プロジェクトを共有",
     "settings": "プロジェクト設定",
     "settingsAction": "プリセットを管理",
+    "edit": "プロジェクトを編集",
     "rename": "プロジェクト名を変更",
     "nameLabel": "プロジェクト名",
     "descriptionLabel": "プロジェクトの説明",
@@ -1534,6 +1535,14 @@
       "title": "詳細設定",
       "defaultModelLabel": "既定モデル",
       "defaultModelPlaceholder": "ワークスペースの既定モデルを使用",
+      "gitTitle": "Git リポジトリ",
+      "gitDescription": "このプロジェクトのデフォルトの Git リポジトリ URL、ブランチ、認証方式を設定します。",
+      "gitRepoUrlLabel": "リポジトリ URL",
+      "gitRepoUrlPlaceholder": "https://github.com/user/repo.git",
+      "gitBranchLabel": "ブランチ",
+      "gitBranchPlaceholder": "main",
+      "gitTokenEnvKeyLabel": "認証環境変数",
+      "gitTokenEnvKeyPlaceholder": "GITHUB_TOKEN",
       "mountTitle": "プロジェクトのマウント",
       "mountDescription": "このプロジェクトの新しい実行に1つ以上のローカルディレクトリを追加します。",
       "chooseFolder": "フォルダーを選択",
@@ -1612,6 +1621,19 @@
     "settingsPanel": {
       "dialogTitle": "{{name}} の設定",
       "dialogDescription": "すべてのプリセットを検索し、このプロジェクトの新しい実行に使うデフォルトを選択します。",
+      "git": {
+        "title": "Git リポジトリ",
+        "repoUrlLabel": "リポジトリ URL",
+        "repoUrlPlaceholder": "https://github.com/user/repo.git",
+        "branchLabel": "ブランチ",
+        "branchPlaceholder": "main",
+        "tokenEnvKeyLabel": "認証環境変数",
+        "tokenEnvKeyPlaceholder": "GITHUB_TOKEN",
+        "toasts": {
+          "updated": "Git 設定を更新しました",
+          "failed": "Git 設定の更新に失敗しました"
+        }
+      },
       "presets": {
         "title": "デフォルトプリセット",
         "description": "このプロジェクトのプリセットを 1 つ選ぶか、デフォルトをクリアして新しい実行をプリセットなしで開始します。",
