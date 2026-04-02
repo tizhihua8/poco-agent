@@ -23,12 +23,12 @@ test("resolveInitialPresetSelection keeps current selection after user interacti
   assert.equal(selected, 9);
 });
 
-test("resolveInitialPresetSelection keeps current selection when no default preset exists", () => {
+test("resolveInitialPresetSelection clears selection when default preset is removed", () => {
   const selected = resolveInitialPresetSelection({
     initialPresetId: null,
     hasTouchedPreset: false,
     currentSelectedPresetId: 5,
   });
 
-  assert.equal(selected, 5);
+  assert.equal(selected, null);
 });

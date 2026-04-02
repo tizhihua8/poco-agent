@@ -80,6 +80,9 @@ class PresetRepository:
     ) -> int:
         return (
             session_db.query(Project)
-            .filter(Project.default_preset_id == preset_id)
+            .filter(
+                Project.default_preset_id == preset_id,
+                Project.is_deleted.is_(False),
+            )
             .count()
         )

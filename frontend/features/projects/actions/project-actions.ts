@@ -85,12 +85,12 @@ export async function createProjectAction(input: CreateProjectInput) {
   return projectsService.createProject({
     name,
     description,
-    default_model: default_model ?? undefined,
+    default_model,
     default_preset_id,
-    local_mounts: local_mounts ?? undefined,
-    repo_url: repo_url ?? undefined,
-    git_branch: git_branch ?? undefined,
-    git_token_env_key: git_token_env_key ?? undefined,
+    local_mounts,
+    repo_url,
+    git_branch,
+    git_token_env_key,
   });
 }
 
@@ -120,12 +120,12 @@ export async function updateProjectAction(input: UpdateProjectInput) {
   return projectsService.updateProject(projectId, {
     name,
     description,
-    default_model: default_model ?? undefined,
+    default_model,
     default_preset_id,
-    local_mounts: local_mounts ?? undefined,
-    repo_url: repo_url ?? undefined,
-    git_branch: git_branch ?? undefined,
-    git_token_env_key: git_token_env_key ?? undefined,
+    local_mounts,
+    repo_url,
+    git_branch,
+    git_token_env_key,
   });
 }
 

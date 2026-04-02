@@ -5,7 +5,7 @@ export function resolveInitialPresetSelection(args: {
 }): number | null {
   const { initialPresetId, hasTouchedPreset, currentSelectedPresetId } = args;
 
-  if (initialPresetId === null || hasTouchedPreset) {
+  if (hasTouchedPreset) {
     return currentSelectedPresetId;
   }
 
