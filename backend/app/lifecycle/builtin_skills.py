@@ -38,6 +38,36 @@ class BuiltinSkillDefinition:
 
 BUILTIN_SKILLS: tuple[BuiltinSkillDefinition, ...] = (
     BuiltinSkillDefinition(
+        name="gif-sticker-maker",
+        asset_dir_name="gif-sticker-maker",
+        description="Built-in skill for generating animated GIF stickers",
+    ),
+    BuiltinSkillDefinition(
+        name="minimax-docx",
+        asset_dir_name="minimax-docx",
+        description="Built-in skill for creating and editing DOCX documents",
+    ),
+    BuiltinSkillDefinition(
+        name="minimax-multimodal-toolkit",
+        asset_dir_name="minimax-multimodal-toolkit",
+        description="Built-in skill for MiniMax multimodal media generation",
+    ),
+    BuiltinSkillDefinition(
+        name="minimax-pdf",
+        asset_dir_name="minimax-pdf",
+        description="Built-in skill for visually polished PDF workflows",
+    ),
+    BuiltinSkillDefinition(
+        name="minimax-xlsx",
+        asset_dir_name="minimax-xlsx",
+        description="Built-in skill for spreadsheet creation and editing",
+    ),
+    BuiltinSkillDefinition(
+        name="pptx-generator",
+        asset_dir_name="pptx-generator",
+        description="Built-in skill for PowerPoint generation and editing",
+    ),
+    BuiltinSkillDefinition(
         name="skill-creator",
         asset_dir_name="skill-creator",
         description="Built-in skill for creating new skills via agent",
