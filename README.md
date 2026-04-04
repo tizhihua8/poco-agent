@@ -51,7 +51,16 @@ A safer, more beautiful, and easier-to-use OpenClaw alternative
   Powered by **mem0**: the agent remembers your preferences, project context, and past interactions to deliver increasingly personalized help.
 - Many more powerful features waiting for you to discover!
 
+## Screenshots
+
+|                                                    Project Settings                                                    |                                          Preset Editor                                           |
+| :--------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: |
+|                                    ![Edit Project](assets/images/edit-project.png)                                     |                          ![Edit Preset](assets/images/edit-preset.png)                           |
+| Set default configurations for your project — presets, local directory mounts, GitHub repos, knowledge base, and more. | DIY your cloud coworker — skills, MCP, sub-agents, and… system prompts & custom visual identity! |
+
 ## Quick Start
+
+![Chat in Project](assets/images/chat-in-project.png)
 
 Run the interactive setup script to automatically generate configuration and start services:
 
