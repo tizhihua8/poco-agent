@@ -1,33 +1,3 @@
-export type PresetIcon =
-  | "default"
-  | "code"
-  | "branch"
-  | "database"
-  | "globe"
-  | "paintbrush"
-  | "book"
-  | "chip"
-  | "robot"
-  | "file"
-  | "message"
-  | "chart"
-  | "shield"
-  | "terminal"
-  | "zap"
-  | "pen"
-  | "wrench"
-  | "link"
-  | "cpu"
-  | "search"
-  | "mail"
-  | "image"
-  | "folder"
-  | "clipboard"
-  | "bug"
-  | "cloud"
-  | "rocket"
-  | "target";
-
 export type PresetSubAgentModel = "sonnet" | "opus" | "haiku" | "inherit";
 
 export interface PresetSubAgentConfig {
@@ -43,8 +13,10 @@ export interface Preset {
   user_id: string;
   name: string;
   description?: string | null;
-  icon: PresetIcon;
-  color?: string | null;
+  visual_key: string;
+  visual_url?: string | null;
+  visual_version?: string | null;
+  visual_name?: string | null;
   prompt_template?: string | null;
   browser_enabled: boolean;
   memory_enabled: boolean;
@@ -59,8 +31,7 @@ export interface Preset {
 export interface PresetCreateInput {
   name: string;
   description?: string | null;
-  icon?: PresetIcon;
-  color?: string | null;
+  visual_key: string;
   prompt_template?: string | null;
   browser_enabled?: boolean;
   memory_enabled?: boolean;
@@ -73,8 +44,7 @@ export interface PresetCreateInput {
 export interface PresetUpdateInput {
   name?: string | null;
   description?: string | null;
-  icon?: PresetIcon | null;
-  color?: string | null;
+  visual_key?: string | null;
   prompt_template?: string | null;
   browser_enabled?: boolean | null;
   memory_enabled?: boolean | null;

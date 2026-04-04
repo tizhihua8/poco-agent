@@ -28,13 +28,12 @@ class Preset(Base, TimestampMixin):
     user_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    icon: Mapped[str] = mapped_column(
+    visual_key: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
-        default="default",
-        server_default=text("'default'"),
+        default="preset-visual-01",
+        server_default=text("'preset-visual-01'"),
     )
-    color: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     prompt_template: Mapped[str | None] = mapped_column(Text, nullable=True)
     browser_enabled: Mapped[bool] = mapped_column(

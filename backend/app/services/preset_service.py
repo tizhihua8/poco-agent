@@ -7,10 +7,12 @@ from app.core.errors.exceptions import AppException
 from app.models.mcp_server import McpServer
 from app.models.plugin import Plugin
 from app.models.preset import Preset
+from app.models.preset_visual import PresetVisual
 from app.models.skill import Skill
 from app.repositories.mcp_server_repository import McpServerRepository
 from app.repositories.plugin_repository import PluginRepository
 from app.repositories.preset_repository import PresetRepository
+from app.repositories.preset_visual_repository import PresetVisualRepository
 from app.repositories.skill_repository import SkillRepository
 from app.schemas.preset import (
     PresetCreateRequest,
@@ -18,12 +20,16 @@ from app.schemas.preset import (
     PresetSubAgentConfig,
     PresetUpdateRequest,
 )
+from app.services.storage_service import S3StorageService
 
 
 class PresetService:
+    def __init__(self, storage_service: S3StorageService | None = None) -> None:
+        self.storage_service = storage_service
+
     def list_presets(self, db: Session, user_id: str) -> list[PresetResponse]:
         presets = PresetRepository.list_by_user(db, user_id)
-        return [self._to_response(item) for item in presets]
+        return [self._to_response(db, item) for item in presets]
 
     def get_preset(self, db: Session, user_id: str, preset_id: int) -> PresetResponse:
         preset = PresetRepository.get_by_id(db, preset_id, user_id)
@@ -32,7 +38,7 @@ class PresetService:
                 error_code=ErrorCode.PRESET_NOT_FOUND,
                 message=f"Preset not found: {preset_id}",
             )
-        return self._to_response(preset)
+        return self._to_response(db, preset)
 
     def create_preset(
         self, db: Session, user_id: str, request: PresetCreateRequest
@@ -51,13 +57,13 @@ class PresetService:
             mcp_server_ids=request.mcp_server_ids,
             plugin_ids=request.plugin_ids,
         )
+        visual = self._require_visual(db, request.visual_key)
 
         preset = Preset(
             user_id=user_id,
             name=name,
             description=self._normalize_optional_str(request.description),
-            icon=request.icon.value,
-            color=request.color,
+            visual_key=visual.key,
             prompt_template=request.prompt_template,
             browser_enabled=request.browser_enabled,
             memory_enabled=request.memory_enabled,
@@ -71,7 +77,7 @@ class PresetService:
         PresetRepository.create(db, preset)
         db.commit()
         db.refresh(preset)
-        return self._to_response(preset)
+        return self._to_response(db, preset)
 
     def update_preset(
         self,
@@ -108,8 +114,10 @@ class PresetService:
             update_data["description"] = self._normalize_optional_str(
                 request.description
             )
-        if "icon" in update_data and request.icon is not None:
-            update_data["icon"] = request.icon.value
+        if "visual_key" in update_data and request.visual_key is not None:
+            update_data["visual_key"] = self._require_visual(
+                db, request.visual_key
+            ).key
 
         skill_ids = update_data.get("skill_ids", preset.skill_ids)
         mcp_server_ids = update_data.get("mcp_server_ids", preset.mcp_server_ids)
@@ -130,7 +138,7 @@ class PresetService:
         PresetRepository.update(db, preset, update_data)
         db.commit()
         db.refresh(preset)
-        return self._to_response(preset)
+        return self._to_response(db, preset)
 
     def delete_preset(self, db: Session, user_id: str, preset_id: int) -> None:
         preset = PresetRepository.get_by_id(db, preset_id, user_id)
@@ -170,14 +178,45 @@ class PresetService:
         clean = (value or "").strip()
         return clean or None
 
-    @staticmethod
-    def _to_response(preset: Preset) -> PresetResponse:
+    def _to_response(self, db: Session, preset: Preset) -> PresetResponse:
         payload = PresetResponse.model_validate(preset)
         payload.subagent_configs = [
             PresetSubAgentConfig.model_validate(item)
             for item in preset.subagent_configs
         ]
+        visual = PresetVisualRepository.get_by_key(db, preset.visual_key)
+        if visual is not None and visual.is_active:
+            payload.visual_name = visual.name
+            payload.visual_version = visual.version
+            payload.visual_url = self._build_visual_url(visual)
         return payload
+
+    def _require_visual(self, db: Session, visual_key: str) -> PresetVisual:
+        visual = PresetVisualRepository.get_by_key(db, visual_key)
+        if visual is None or not visual.is_active:
+            raise AppException(
+                error_code=ErrorCode.BAD_REQUEST,
+                message=f"Invalid preset visual key: {visual_key}",
+            )
+        return visual
+
+    def _build_visual_url(self, visual: PresetVisual) -> str | None:
+        storage_service = self._storage_service()
+        if storage_service is None:
+            return None
+        return storage_service.presign_get(
+            visual.storage_key,
+            response_content_type="image/svg+xml",
+        )
+
+    def _storage_service(self) -> S3StorageService | None:
+        if self.storage_service is not None:
+            return self.storage_service
+        try:
+            self.storage_service = S3StorageService()
+        except Exception:
+            self.storage_service = None
+        return self.storage_service
 
     @staticmethod
     def _validate_visible_skills(

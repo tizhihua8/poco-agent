@@ -17,8 +17,9 @@ def build_preset_response(preset_id: int = 1, name: str = "Frontend") -> PresetR
         user_id="user-1",
         name=name,
         description="Reusable preset",
-        icon="default",
-        color="#0ea5e9",
+        visual_key="preset-visual-01",
+        visual_url="https://example.com/preset.svg",
+        visual_version="abc123",
         prompt_template=None,
         browser_enabled=True,
         memory_enabled=False,
@@ -77,7 +78,7 @@ class PresetApiTests(unittest.TestCase):
             json={
                 "name": "Backend",
                 "description": "Backend preset",
-                "icon": "default",
+                "visual_key": "preset-visual-01",
                 "browser_enabled": False,
                 "memory_enabled": True,
                 "skill_ids": [],
@@ -92,6 +93,7 @@ class PresetApiTests(unittest.TestCase):
         self.assertEqual(body["code"], 0)
         self.assertEqual(body["data"]["preset_id"], 7)
         self.assertEqual(body["data"]["name"], "Backend")
+        self.assertEqual(body["data"]["visual_key"], "preset-visual-01")
         create_preset.assert_called_once()
 
     @patch("app.api.v1.presets.service.delete_preset")

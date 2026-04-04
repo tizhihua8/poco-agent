@@ -1,39 +1,8 @@
 from datetime import datetime
-from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.sub_agent import SubAgentModel
-
-
-class PresetIcon(StrEnum):
-    DEFAULT = "default"
-    CODE = "code"
-    BRANCH = "branch"
-    DATABASE = "database"
-    GLOBE = "globe"
-    PAINTBRUSH = "paintbrush"
-    BOOK = "book"
-    CHIP = "chip"
-    ROBOT = "robot"
-    FILE = "file"
-    MESSAGE = "message"
-    CHART = "chart"
-    SHIELD = "shield"
-    TERMINAL = "terminal"
-    ZAP = "zap"
-    PEN = "pen"
-    WRENCH = "wrench"
-    LINK = "link"
-    CPU = "cpu"
-    SEARCH = "search"
-    MAIL = "mail"
-    IMAGE = "image"
-    FOLDER = "folder"
-    CLIPBOARD = "clipboard"
-    BUG = "bug"
-    CLOUD = "cloud"
-    ROCKET = "rocket"
-    TARGET = "target"
 
 
 class PresetSubAgentConfig(BaseModel):
@@ -44,15 +13,17 @@ class PresetSubAgentConfig(BaseModel):
     tools: list[str] | None = None
 
 
+class PresetVisualSummary(BaseModel):
+    key: str
+    url: str | None = None
+    version: str | None = None
+    name: str | None = None
+
+
 class PresetBase(BaseModel):
     name: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=1000)
-    icon: PresetIcon = PresetIcon.DEFAULT
-    color: str | None = Field(
-        default=None,
-        pattern=r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
-        max_length=20,
-    )
+    visual_key: str = Field(min_length=1, max_length=255)
     prompt_template: str | None = None
     browser_enabled: bool = False
     memory_enabled: bool = False
@@ -69,12 +40,7 @@ class PresetCreateRequest(PresetBase):
 class PresetUpdateRequest(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=1000)
-    icon: PresetIcon | None = None
-    color: str | None = Field(
-        default=None,
-        pattern=r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
-        max_length=20,
-    )
+    visual_key: str | None = Field(default=None, min_length=1, max_length=255)
     prompt_template: str | None = None
     browser_enabled: bool | None = None
     memory_enabled: bool | None = None
@@ -89,8 +55,10 @@ class PresetResponse(BaseModel):
     user_id: str
     name: str
     description: str | None = None
-    icon: PresetIcon
-    color: str | None = None
+    visual_key: str
+    visual_url: str | None = None
+    visual_version: str | None = None
+    visual_name: str | None = None
     prompt_template: str | None = None
     browser_enabled: bool
     memory_enabled: bool
